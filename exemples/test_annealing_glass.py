@@ -13,6 +13,6 @@ import numpy as np
 
 TSP = AnnealingGlass(state=np.random.rand(45).tolist(),
                      qtd_distutb=20, tg=0.85, perc_disturb=1)
-TSP.copy_trategy = "slice"
-STATE, E = TSP.anneal()
-PRED = TSP.predict(STATE)
+
+RESULT = TSP.run()
+print(RESULT.get_result()[0])

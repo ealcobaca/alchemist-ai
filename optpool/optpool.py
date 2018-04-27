@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 File.....: optimizer.py
@@ -30,26 +31,3 @@ class OptPool(object):
         pool.join()
 
         return final
-
-
-class ResultOpt(object):
-    """ TODO """
-
-    def __init__(self, type_opt, result):
-        self.type_opt = type_opt
-        self.result = result
-
-    def get_result(self):
-        """TODO: Docstring for getResult.
-        :returns: TODO
-
-        """
-        return self.result
-
-    def get_type(self):
-        """TODO: Docstring for getType.
-
-        :returns: TODO
-
-        """
-        return self.type_opt

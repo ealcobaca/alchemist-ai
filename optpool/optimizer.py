@@ -18,7 +18,6 @@ class Optimizer(object):
     TODO:
     """
     def __init__(self, path='models/ANN.h5'):
-        print(path)
         custom_objects = {'huber_loss': tf.losses.huber_loss}
         self.model = load_model(path, custom_objects=custom_objects)
 
@@ -28,12 +27,11 @@ class Optimizer(object):
 
         """
         pred = self.model.predict(np.array([example]))
-        return pred
+        return pred[0]
 
     def run(self):
         """TODO: Docstring for run.
-
         :returns: TODO
 
         """
-        pass
+        return []
