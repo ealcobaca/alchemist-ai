@@ -81,10 +81,9 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, model, sizeVector, sizeSample, target, n_cpu=None):
+    def __init__(self, sizeVector, sizeSample, target, n_cpu=None):
         Optimizer.__init__(self)
         global num_dimensions
-        self.model = model
         self.sizeVector = sizeVector
         self.sizeSample = sizeSample
         self.target = target
