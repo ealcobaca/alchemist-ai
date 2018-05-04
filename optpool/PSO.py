@@ -12,7 +12,6 @@ from __future__ import division
 import random
 import math
 import numpy as np
-#from .resultopt import ResultOpt
 from optpool import ResultOpt
 from optpool import Optimizer
 import multiprocessing
@@ -38,7 +37,7 @@ class Particle:
         self.fit_i = -1
 
         for i in range(0,num_dimensions):
-            self.velocity_i.append(random.uniform(-1,1))
+            self.velocity_i.append(random.uniform(-0.5,0.5))
             self.position_i.append(x0[i])
 
     # evaluate current fitness
@@ -51,7 +50,7 @@ class Particle:
             self.err_best_i=self.err_i
 
     # update new particle velocity
-    def update_velocity(self,pos_best_g):
+    def update_velocity(self, pos_best_g):
         w=0.5       # constant inertia weight (how much to weigh the previous velocity)
         c1=1        # cognative constant
         c2=1        # social constant
@@ -69,6 +68,7 @@ class Particle:
         for i in range(0,num_dimensions):
             self.position_i[i]=self.position_i[i]+self.velocity_i[i]
 
+            '''
             # adjust maximum position if necessary
             if self.position_i[i]>bounds[i][1]:
                 self.position_i[i]=bounds[i][1]
@@ -76,17 +76,37 @@ class Particle:
             # adjust minimum position if neseccary
             if self.position_i[i] < bounds[i][0]:
                 self.position_i[i]=bounds[i][0]
+            '''
+            
+            # adjust maximum position if necessary
+            if self.position_i[i]>bounds[i][0]:
+                self.position_i[i]=bounds[i][0]
+
+            # adjust minimum position if neseccary
+            if self.position_i[i] < bounds[i][1]:
+                self.position_i[i]=bounds[i][1]
+        
+         
         
         summatory = sum(self.position_i)
+        is_ok = False
+        while not is_ok:
+            coef = random.uniform(0.10001, 1.0)
+            self.position_i[44] = summatory*coef#*0.101
+            summatory = sum(self.position_i)
+            if float(self.position_i[44])/float(summatory) > 0.1:
+                is_ok = True
+        
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, sizeSample, target, n_cpu=None):
+    def __init__(self, sizeVector, sizeSample, target, max_min_comp, n_cpu=None):
         Optimizer.__init__(self)
         global num_dimensions
         self.sizeVector = sizeVector
         self.sizeSample = sizeSample
         self.target = target
+        self.max_min_comp = max_min_comp
         
         if n_cpu is None:
             self.n_cpu = multiprocessing.cpu_count()
@@ -103,8 +123,8 @@ class PSO(Optimizer):
         x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
         summatory = sum(x0)
         x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=50
-        maxiter=10
+        num_particles=100
+        maxiter=100
         epsilon = 0.0000001
         
         solutions = []
@@ -140,15 +160,16 @@ class PSO(Optimizer):
     
                 # cycle through swarm and update velocities and position
                 for j in range(0,num_particles):
-                    swarm[j].update_velocity(self.pos_best_g)
-                    swarm[j].update_position(bounds)
+                    is_ok = False
+                    while not is_ok:
+                        swarm[j].update_velocity(self.pos_best_g)
+                        #swarm[j].update_position(bounds)
+                        swarm[j].update_position(self.max_min_comp)
+                        is_ok = self.check_restriction(swarm[j], self.max_min_comp)
+                    
                 iteration+=1
             print(iteration)
     
-            # print final results
-            #print ('FINAL:')
-            #print (pos_best_g)
-            #print (err_best_g)
             solutions.append(self.pos_best_g)
             valuesFunction.append(fit_best_g)
             errors.append(err_best_g)
@@ -158,8 +179,13 @@ class PSO(Optimizer):
         #return solucoes, valoresFuncao, erros
         return result
         
-    def getBest(self):
-        return self.pos_best_g
-
-if __name__ == "__PSO__":
-    main()
+    def check_restriction(self, particle, max_min_comp):
+        is_ok = True
+        i = 0
+        while is_ok and i < num_dimensions:
+            max_i = max_min_comp[i][0]
+            min_i = max_min_comp[i][1]
+            value_i = particle.position_i[i]
+            is_ok = is_ok and (min_i <= value_i) and (value_i <= max_i)
+            i = i + 1
+        return is_ok
