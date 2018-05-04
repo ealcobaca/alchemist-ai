@@ -7,7 +7,7 @@ Description:
 """
 
 import csv
-import numpy
+import numpy as np
 
 class Reader():
     def __init__(self):
@@ -16,7 +16,7 @@ class Reader():
     def read_file(self, file_name):
         reader = csv.reader(open(file_name, "r"), delimiter="\t")
         x = list(reader)
-        result = numpy.array(x)
+        result = np.array(x)
         return result
     
     def get_max_min_comp(self, file_name):
@@ -30,3 +30,9 @@ class Reader():
             minimum = float(row[selected_columns[1]])
             max_min_comp.append((maximum,minimum))
         return max_min_comp
+        
+    def get_data(self, file_name):
+        result = self.read_file(file_name)
+        result = np.array([result[i] for i in range(1,len(result))])
+        result = result.astype(np.float)
+        return result
