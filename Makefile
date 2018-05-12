@@ -6,7 +6,7 @@ help:
 
 ex-annealing:
 	@printf "[----- Run annealing example -----]\n\n"
-	@python -m exemples.test_annealing_glass
+	@python -m examples.test_annealing_glass
 	@printf "\n[----- Done! -----]\n"
 ger-req:
 	@printf "[----- Generating pip requirements -----]\n\n"
