@@ -10,6 +10,7 @@ Description:
 
 import multiprocessing as mp
 
+
 class OptPool(object):
     """ TODO """
 
@@ -21,13 +22,7 @@ class OptPool(object):
         :returns: TODO
 
         """
-        pool = mp.Pool(processes=n_processes)
-        # launching multiple evaluations asynchronously
         results = []
         for opt in self.optmizers:
-            results.append(pool.apply_async(opt.run, (opt,)))
-        final = [result.get() for result in results]
-        pool.close()
-        pool.join()
-
-        return final
+            results.append(opt.run())
+        return results

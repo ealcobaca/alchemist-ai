@@ -13,21 +13,32 @@ from simanneal import Annealer
 from .optimizer import Optimizer
 from .resultopt import ResultOpt
 import multiprocessing
+import copy
+from multiprocessing import Process
 
 
-class AnnealingGlass(Annealer, Optimizer):
+class AnnealingGlass(Annealer, Optimizer, Process):
     """ TODO  """
     model_input_length = 45
 
     def __init__(self, state, tg, qtd_distutb=1,
-                 perc_disturb=0.01, pop=5, n_cpu=None):
+                 perc_disturb=0.01, n_cpu=None):
         Annealer.__init__(self, initial_state=state)  # important!
         Optimizer.__init__(self)
+        Process.__init__(self)
+
         self.tg = tg
         self.qtd_distutb = qtd_distutb
         self.perc_disturb = perc_disturb
-        self.pop = pop
         self.copy_trategy = "slice"
+        self.states = state
+
+        if isinstance(self.states[0], list):
+            self.state = self.states[0]
+            self.pop = len(self.states)
+        else:
+            self.pop = 1
+
         if n_cpu is None:
             self.n_cpu = multiprocessing.cpu_count()
         else:
@@ -52,19 +63,24 @@ class AnnealingGlass(Annealer, Optimizer):
         return np.abs(pred - self.tg)
 
     def run(self):
-        # pool = Pool(processes=self.n_cpu)
         preds = []
         energys = []
         states = []
         i = 0
+
         while i < self.pop:
+            if self.pop == 1:
+                self.state = self.states
+            else:
+                self.state = self.states[i]
+
+            state, energy = self.anneal()
+            pred = self.predict(state)
             i += 1
-            opt = self.clone()
-            state, energy = opt.anneal()
-            pred = opt.predict(state)
-            preds.append(pred)
-            energys.append(energy)
-            states.append(state)
+
+            preds.append(pred[0])
+            energys.append(energy[0])
+            states.append(state.tolist())
 
         result = ResultOpt(type_opt='annealing',
                            result=[preds, energys, states])
@@ -75,5 +91,6 @@ class AnnealingGlass(Annealer, Optimizer):
 
         :returns: TODO
         """
-        return AnnealingGlass(self.state, self.tg, self.qtd_distutb,
-                              self.perc_disturb, self.pop, self.n_cpu)
+        obj = AnnealingGlass(self.state, self.tg, self.qtd_distutb,
+                             self.perc_disturb, self.pop, self.n_cpu)
+        return obj
