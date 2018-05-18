@@ -6,6 +6,7 @@ Github...: https://github.com/bapimentel
 Description:
 """
 
+
 #--- IMPORT DEPENDENCIES ------------------------------------------------------+
 
 from __future__ import division
@@ -100,13 +101,17 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, sizeSample, target, max_min_comp, n_cpu=None):
+    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None):
         Optimizer.__init__(self)
         global num_dimensions
         self.sizeVector = sizeVector
-        self.sizeSample = sizeSample
         self.target = target
         self.max_min_comp = max_min_comp
+
+        self.initialVectors = initialVectors
+        if not isinstance(initialVectors[0], list):
+            self.initialVectors = [initialVectors]
+        self.sizeSample = len(self.initialVectors)
         
         if n_cpu is None:
             self.n_cpu = multiprocessing.cpu_count()
@@ -120,11 +125,11 @@ class PSO(Optimizer):
         m = 0
         M = 1
         bounds=[(m,M)]*self.sizeVector  # input bounds [(x1_min,x1_max),(x2_min,x2_max)...]
-        x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
-        summatory = sum(x0)
-        x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=100
-        maxiter=100
+        #x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
+        #summatory = sum(x0)
+        #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
+        num_particles=100 #100
+        maxiter=100 #100
         epsilon = 0.0000001
         
         solutions = []
@@ -132,6 +137,9 @@ class PSO(Optimizer):
         errors = []
         for i in range(self.sizeSample):
             self.pos_best_g = 0
+            x0 = self.initialVectors[i]
+            summatory = sum(x0)
+            x0 = [x0[i]/summatory for i in range(self.sizeVector)]
             num_dimensions=len(x0)
             err_best_g=-1                   # best error for group
             pos_best_g=[]                   # best position for group
