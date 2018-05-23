@@ -130,8 +130,8 @@ class PSO(Optimizer):
         #x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
         #summatory = sum(x0)
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=50 #100
-        maxiter=50 #100
+        num_particles=100 #100
+        maxiter=100 #100
         epsilon = 0.0000001
         
         solutions = []
