@@ -90,6 +90,7 @@ class Particle:
          
         
         summatory = sum(self.position_i)
+        '''
         is_ok = False
         while not is_ok:
             coef = random.uniform(0.10001, 1.0)
@@ -97,6 +98,7 @@ class Particle:
             summatory = sum(self.position_i)
             if float(self.position_i[44])/float(summatory) > 0.1:
                 is_ok = True
+        '''
         
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
@@ -128,14 +130,15 @@ class PSO(Optimizer):
         #x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
         #summatory = sum(x0)
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=100 #100
-        maxiter=100 #100
+        num_particles=50 #100
+        maxiter=50 #100
         epsilon = 0.0000001
         
         solutions = []
         valuesFunction = []
         errors = []
         for i in range(self.sizeSample):
+            print('Amostra '+str(i+1))
             self.pos_best_g = 0
             x0 = self.initialVectors[i]
             summatory = sum(x0)
@@ -173,10 +176,10 @@ class PSO(Optimizer):
                         swarm[j].update_velocity(self.pos_best_g)
                         #swarm[j].update_position(bounds)
                         swarm[j].update_position(self.max_min_comp)
-                        is_ok = self.check_restriction(swarm[j], self.max_min_comp)
+                        is_ok = True#self.check_restriction(swarm[j], self.max_min_comp)
                     
                 iteration+=1
-            print(iteration)
+            #print(iteration)
     
             solutions.append(self.pos_best_g)
             valuesFunction.append(fit_best_g)
