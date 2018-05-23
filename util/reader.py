@@ -31,8 +31,13 @@ class Reader():
             max_min_comp.append((maximum,minimum))
         return max_min_comp
         
-    def get_data(self, file_name):
+    def get_data(self, file_name, header=True):
         result = self.read_file(file_name)
-        result = np.array([result[i] for i in range(1,len(result))])
+        begin = 0
+        if header:
+          begin = 1
+        result = np.array([result[i] for i in range(begin,len(result))])          
         result = result.astype(np.float)
         return result
+        
+        
