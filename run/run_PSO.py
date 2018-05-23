@@ -11,7 +11,7 @@ class Run_PSO(object):
         Mm = r.get_max_min_comp('data/AtomFrequency.csv')
         print("Executando PSO")
         tamanhoVetor = 45
-        tamanhoAmostra = 2
+        tamanhoAmostra = 500
         valoresAlvo = [0.1, 0.3, 0.5, 0.7, 0.9] 
         for valorAlvo in valoresAlvo:
             print("\n\nValor alvo: "+str(valorAlvo)) 
