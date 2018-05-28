@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'UI/GG_start.ui'
+# Form implementation generated from reading ui file 'ui/GG_start.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from utilGui import Names
 
 class Ui_main_window(object):
     def setupUi(self, main_window):
@@ -14,21 +15,11 @@ class Ui_main_window(object):
         main_window.resize(684, 828)
         self.centralwidget = QtWidgets.QWidget(main_window)
         self.centralwidget.setObjectName("centralwidget")
-        self.add_btn = QtWidgets.QPushButton(self.centralwidget)
-        self.add_btn.setGeometry(QtCore.QRect(20, 20, 122, 30))
-        self.add_btn.setObjectName("add_btn")
-        self.edit_btn = QtWidgets.QPushButton(self.centralwidget)
-        self.edit_btn.setGeometry(QtCore.QRect(160, 20, 122, 30))
-        self.edit_btn.setObjectName("edit_btn")
-        self.remove_btn = QtWidgets.QPushButton(self.centralwidget)
-        self.remove_btn.setGeometry(QtCore.QRect(300, 20, 122, 30))
-        self.remove_btn.setObjectName("remove_btn")
-        self.optimizer_btn = QtWidgets.QPushButton(self.centralwidget)
-        self.optimizer_btn.setGeometry(QtCore.QRect(440, 20, 122, 30))
-        self.optimizer_btn.setMouseTracking(False)
-        self.optimizer_btn.setObjectName("optimizer_btn")
+
+        # run_btn
         self.run_btn = QtWidgets.QPushButton(self.centralwidget)
-        self.run_btn.setGeometry(QtCore.QRect(610, 20, 51, 30))
+        self.run_btn.setText("Run")
+        self.run_btn.setGeometry(QtCore.QRect(510, 20, 121, 30))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
@@ -36,15 +27,19 @@ class Ui_main_window(object):
         self.run_btn.setStyleSheet("border-color: rgb(114, 159, 207);\n"
 "background-color: rgb(78, 154, 6);")
         self.run_btn.setObjectName("run_btn")
+
+        # min_max table
         self.min_max_table = QtWidgets.QTableWidget(self.centralwidget)
         self.min_max_table.setGeometry(QtCore.QRect(20, 100, 421, 192))
         self.min_max_table.setObjectName("min_max_table")
-        self.min_max_table.setColumnCount(3)
-        self.min_max_table.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.min_max_table.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignVCenter)
+        self.min_max_table.setColumnCount(2)
+        self.min_max_table.setRowCount(45)
+
+        for i in range(len(Names.Chemical_Elemnts)):
+            item = QtWidgets.QTableWidgetItem(Names.Chemical_Elemnts[i])
+            self.min_max_table.setVerticalHeaderItem(i, item)
+
+        item = QtWidgets.QTableWidgetItem("min")
         font = QtGui.QFont()
         font.setBold(False)
         font.setItalic(True)
@@ -52,7 +47,7 @@ class Ui_main_window(object):
         item.setFont(font)
         item.setBackground(QtGui.QColor(114, 159, 207))
         self.min_max_table.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
+        item = QtWidgets.QTableWidgetItem("max")
         font = QtGui.QFont()
         font.setBold(False)
         font.setItalic(True)
@@ -60,22 +55,21 @@ class Ui_main_window(object):
         item.setFont(font)
         item.setBackground(QtGui.QColor(114, 159, 207))
         self.min_max_table.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        font = QtGui.QFont()
-        font.setBold(False)
-        font.setItalic(True)
-        font.setWeight(50)
-        item.setFont(font)
-        item.setBackground(QtGui.QColor(114, 159, 207))
-        self.min_max_table.setHorizontalHeaderItem(2, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.min_max_table.setItem(0, 0, item)
+
+        for i in range(len(Names.Chemical_Elemnts)):
+            for j in range(2):
+                self.min_max_table.setItem(
+                    i, j, QtWidgets.QTableWidgetItem("0.0"))
         self.min_max_label = QtWidgets.QLabel(self.centralwidget)
         self.min_max_label.setGeometry(QtCore.QRect(20, 70, 421, 22))
         self.min_max_label.setObjectName("min_max_label")
+
+        # opt_label
         self.opt_label = QtWidgets.QLabel(self.centralwidget)
         self.opt_label.setGeometry(QtCore.QRect(460, 100, 201, 22))
         self.opt_label.setObjectName("opt_label")
+
+        # amount
         self.amount_sp = QtWidgets.QSpinBox(self.centralwidget)
         self.amount_sp.setGeometry(QtCore.QRect(460, 260, 201, 31))
         self.amount_sp.setMinimum(1)
@@ -84,44 +78,51 @@ class Ui_main_window(object):
         self.amount_label = QtWidgets.QLabel(self.centralwidget)
         self.amount_label.setGeometry(QtCore.QRect(460, 230, 201, 22))
         self.amount_label.setObjectName("amount_label")
+
+        # opt_cb
         self.opt_cb = QtWidgets.QComboBox(self.centralwidget)
         self.opt_cb.setGeometry(QtCore.QRect(460, 130, 201, 30))
         self.opt_cb.setObjectName("opt_cb")
-        self.opt_cb.addItem("")
-        self.opt_cb.addItem("")
+        self.opt_cb.addItem("Annealing")
+        self.opt_cb.addItem("PSO")
+
+        # result_tb
         self.result_label = QtWidgets.QLabel(self.centralwidget)
         self.result_label.setGeometry(QtCore.QRect(20, 350, 641, 22))
         self.result_label.setObjectName("result_label")
-        self.result_table = QtWidgets.QTableWidget(self.centralwidget)
-        self.result_table.setGeometry(QtCore.QRect(20, 380, 641, 341))
-        self.result_table.setObjectName("result_table")
-        self.result_table.setColumnCount(2)
-        self.result_table.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.result_table.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        font = QtGui.QFont()
-        font.setItalic(True)
-        item.setFont(font)
-        item.setBackground(QtGui.QColor(114, 159, 207))
-        self.result_table.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        font = QtGui.QFont()
-        font.setItalic(True)
-        font.setUnderline(False)
-        item.setFont(font)
-        item.setBackground(QtGui.QColor(114, 159, 207))
-        self.result_table.setHorizontalHeaderItem(1, item)
+        self.result_tb = QtWidgets.QTableWidget(self.centralwidget)
+        self.result_tb.setGeometry(QtCore.QRect(20, 380, 641, 341))
+        self.result_tb.setObjectName("result_table")
+        self.result_tb.setColumnCount(45)
+        # self.result_tb.setRowCount(1)
+
+        for i in range(len(Names.Chemical_Elemnts)):
+            item = QtWidgets.QTableWidgetItem(Names.Chemical_Elemnts[i])
+            self.result_tb.setHorizontalHeaderItem(i, item)
+            font = QtGui.QFont()
+            font.setItalic(True)
+            item.setFont(font)
+            item.setBackground(QtGui.QColor(114, 159, 207))
+
+        # discard_btn
         self.discard_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.discard_btn.setText("Discard")
         self.discard_btn.setGeometry(QtCore.QRect(540, 730, 122, 30))
         self.discard_btn.setObjectName("discard_btn")
+
+        # save_btn
         self.save_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.save_btn.setText("Save")
         self.save_btn.setGeometry(QtCore.QRect(400, 730, 122, 30))
         self.save_btn.setToolTip("")
         self.save_btn.setObjectName("save_btn")
+
+        # clean_all_btn
         self.clean_all_btn = QtWidgets.QPushButton(self.centralwidget)
         self.clean_all_btn.setGeometry(QtCore.QRect(20, 730, 122, 30))
         self.clean_all_btn.setObjectName("clean_all_btn")
+        self.clean_all_btn.setText("Clan All")
+
         main_window.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(main_window)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 684, 27))
@@ -130,53 +131,3 @@ class Ui_main_window(object):
         self.statusbar = QtWidgets.QStatusBar(main_window)
         self.statusbar.setObjectName("statusbar")
         main_window.setStatusBar(self.statusbar)
-
-        self.retranslateUi(main_window)
-        QtCore.QMetaObject.connectSlotsByName(main_window)
-        main_window.setTabOrder(self.add_btn, self.edit_btn)
-        main_window.setTabOrder(self.edit_btn, self.remove_btn)
-        main_window.setTabOrder(self.remove_btn, self.optimizer_btn)
-        main_window.setTabOrder(self.optimizer_btn, self.opt_cb)
-        main_window.setTabOrder(self.opt_cb, self.amount_sp)
-        main_window.setTabOrder(self.amount_sp, self.run_btn)
-        main_window.setTabOrder(self.run_btn, self.save_btn)
-        main_window.setTabOrder(self.save_btn, self.discard_btn)
-        main_window.setTabOrder(self.discard_btn, self.clean_all_btn)
-        main_window.setTabOrder(self.clean_all_btn, self.result_table)
-        main_window.setTabOrder(self.result_table, self.min_max_table)
-
-    def retranslateUi(self, main_window):
-        _translate = QtCore.QCoreApplication.translate
-        main_window.setWindowTitle(_translate("main_window", "Glass Generator - GG"))
-        self.add_btn.setText(_translate("main_window", "Add"))
-        self.edit_btn.setText(_translate("main_window", "Edit"))
-        self.remove_btn.setText(_translate("main_window", "Remove"))
-        self.optimizer_btn.setText(_translate("main_window", "Optimizer"))
-        self.run_btn.setText(_translate("main_window", "Run"))
-        item = self.min_max_table.verticalHeaderItem(0)
-        item.setText(_translate("main_window", "1"))
-        item = self.min_max_table.horizontalHeaderItem(0)
-        item.setText(_translate("main_window", "Chemical element"))
-        item = self.min_max_table.horizontalHeaderItem(1)
-        item.setText(_translate("main_window", "Min"))
-        item = self.min_max_table.horizontalHeaderItem(2)
-        item.setText(_translate("main_window", "Max"))
-        __sortingEnabled = self.min_max_table.isSortingEnabled()
-        self.min_max_table.setSortingEnabled(False)
-        self.min_max_table.setSortingEnabled(__sortingEnabled)
-        self.min_max_label.setText(_translate("main_window", "Search space limitation:"))
-        self.opt_label.setText(_translate("main_window", "Optimizer:"))
-        self.amount_label.setText(_translate("main_window", "Amount:"))
-        self.opt_cb.setItemText(0, _translate("main_window", "Annealing"))
-        self.opt_cb.setItemText(1, _translate("main_window", "PSO"))
-        self.result_label.setText(_translate("main_window", "Results:"))
-        item = self.result_table.verticalHeaderItem(0)
-        item.setText(_translate("main_window", "1"))
-        item = self.result_table.horizontalHeaderItem(0)
-        item.setText(_translate("main_window", "Cd"))
-        item = self.result_table.horizontalHeaderItem(1)
-        item.setText(_translate("main_window", "Yb"))
-        self.discard_btn.setText(_translate("main_window", "Discard"))
-        self.save_btn.setText(_translate("main_window", "Save"))
-        self.clean_all_btn.setText(_translate("main_window", "Clean All"))
-

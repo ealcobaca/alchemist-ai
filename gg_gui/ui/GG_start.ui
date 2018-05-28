@@ -15,67 +15,12 @@
    <string>Glass Generator - GG</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="add_btn">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>122</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="edit_btn">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>20</y>
-      <width>122</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Edit</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="remove_btn">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>20</y>
-      <width>122</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remove</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="optimizer_btn">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>20</y>
-      <width>122</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="text">
-     <string>Optimizer</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="run_btn">
     <property name="geometry">
      <rect>
-      <x>610</x>
+      <x>510</x>
       <y>20</y>
-      <width>51</width>
+      <width>121</width>
       <height>30</height>
      </rect>
     </property>
@@ -107,28 +52,16 @@ background-color: rgb(78, 154, 6);</string>
       <string>1</string>
      </property>
     </row>
-    <column>
+    <row>
      <property name="text">
-      <string>Chemical element</string>
+      <string>2</string>
      </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <italic>true</italic>
-       <bold>false</bold>
-      </font>
+    </row>
+    <row>
+     <property name="text">
+      <string>3</string>
      </property>
-     <property name="textAlignment">
-      <set>AlignLeading|AlignVCenter</set>
-     </property>
-     <property name="background">
-      <color>
-       <red>114</red>
-       <green>159</green>
-       <blue>207</blue>
-      </color>
-     </property>
-    </column>
+    </row>
     <column>
      <property name="text">
       <string>Min</string>
@@ -169,7 +102,32 @@ background-color: rgb(78, 154, 6);</string>
     </column>
     <item row="0" column="0">
      <property name="text">
-      <string/>
+      <string>asdas</string>
+     </property>
+    </item>
+    <item row="0" column="1">
+     <property name="text">
+      <string>asd</string>
+     </property>
+    </item>
+    <item row="1" column="0">
+     <property name="text">
+      <string>asd</string>
+     </property>
+    </item>
+    <item row="1" column="1">
+     <property name="text">
+      <string>asd</string>
+     </property>
+    </item>
+    <item row="2" column="0">
+     <property name="text">
+      <string>asd</string>
+     </property>
+    </item>
+    <item row="2" column="1">
+     <property name="text">
+      <string>asd</string>
      </property>
     </item>
    </widget>
@@ -367,10 +325,6 @@ background-color: rgb(78, 154, 6);</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>add_btn</tabstop>
-  <tabstop>edit_btn</tabstop>
-  <tabstop>remove_btn</tabstop>
-  <tabstop>optimizer_btn</tabstop>
   <tabstop>opt_cb</tabstop>
   <tabstop>amount_sp</tabstop>
   <tabstop>run_btn</tabstop>
