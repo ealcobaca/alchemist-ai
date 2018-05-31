@@ -90,12 +90,13 @@ def gerarParalelas(file_names):
     pasta = "C:/Users/Bruno Pimentel/Desktop/paralelas.png"
     fig.savefig(pasta, dpi=300, format="png", bbox_inches="tight")
     
-def gerarPontos(file_names):
+def gerarPontos(TG, file_names, nomes):
     dados = []
     for file_name in file_names:
         dados.append(read_file(file_name))
      
     fig = plt.figure()
+    ax = plt.subplot(111)
     v = var(dados[1])
     print(v)
     index = np.argsort([-v[i] for i in range(len(v))])
@@ -106,8 +107,21 @@ def gerarPontos(file_names):
     y_real = [float(dados[0][i][var_y]) for i in range(len(dados[0]))]    
     x_pso = [float(dados[1][i][var_x]) for i in range(len(dados[1]))]
     y_pso = [float(dados[1][i][var_y]) for i in range(len(dados[1]))]
-    plt.scatter(x_real, y_real, c='r', s=0.5, marker='+')
-    plt.scatter(x_pso, y_pso, c='b', s=0.5, marker='.')
+    plt.scatter(x_real, y_real, c='r', s=15, marker='s', alpha=0.5, label='Real')
+    plt.scatter(x_pso, y_pso, c='b', s=15, marker='o', alpha=0.5, label = 'PSO')
+    
+    ax.set_title('TG = '+str(TG), fontsize=12)
+    plt.xlabel(nomes[var_x], fontsize=12)
+    plt.ylabel(nomes[var_y], fontsize=12)
+    
+    plt.legend()
+#    plt.grid(True)
+    
+#    box = ax.get_position()
+#    ax.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
+#    legend = ax.legend(loc='upper center', bbox_to_anchor=(0.47, -0.2),fancybox=True, shadow=True, ncol=5, fontsize=12)
+#    legend.get_frame().set_facecolor('#FFFFFF')
+    
     plt.show()
     
 #    print (maximo_lista(x_real), maximo_lista(y_real))
@@ -116,14 +130,18 @@ def gerarPontos(file_names):
     print(len(dados[0]))
     print(len(dados[1]))
     
-    pasta = "C:/Users/Bruno Pimentel/Desktop/paralelas.png"
+    pasta = "C:/Users/Bruno/Desktop/TG_"+str(TG)[2]+".png"
     fig.savefig(pasta, dpi=300, format="png", bbox_inches="tight")
     
-  
-real_03 = "C:/Users/Bruno Pimentel/Downloads/Glass/util/output_real_9.csv"
-pso_03 = "C:/Users/Bruno Pimentel/Downloads/Glass/util/output_PSO_9.csv"
-file_names = [real_03, pso_03]
+
+TG = 0.9
+nomes = ['Cd', 'Yb', 'Cs', 'N', 'Mn', 'S', 'Ce', 'Er', 'I', 'Mo',
+         'Cl', 'As', 'Ga', 'Cu', 'Sn', 'Ag', 'Ta', 'Y', 'Gd', 'Ge',
+         'V', 'Fe', 'W', 'F', 'Sb', 'Sr', 'Te', 'Nb', 'Bi', 'La',
+         'Pb', 'Zr', 'Ti', 'Mg', 'Ba', 'K', 'Ca', 'Zn', 'Li', 'P',
+         'Al', 'Na', 'B', 'Si', 'O'] 
+real = "C:/Users/Bruno/Downloads/Glass/util/output_real_9.csv"
+pso = "C:/Users/Bruno/Downloads/Glass/util/output_PSO_9.csv"
+file_names = [real, pso]
 #gerarParalelas(file_names)
-gerarPontos(file_names)
-    
-    
+gerarPontos(TG, file_names, nomes)
