@@ -5,6 +5,8 @@ import sys
 import re
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from gui import Ui_main_window
+sys.path.append("../")  # Adds higher directory to python modules path.
+from optpool import AnnealingGlass
 
 
 class App(QMainWindow, Ui_main_window):
@@ -74,6 +76,22 @@ class App(QMainWindow, Ui_main_window):
         print("Tg: {0:6f}".format(tg))
 
         # chamada para a API
+        restriction = [[0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0],
+                       [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0]]
+        tsp = AnnealingGlass(tg=0.85, steps=5000, restriction=restriction,
+                             save_preds=True, save_states=True, path="../models/ANN.h5")
+        result = tsp.run()
+        print()
+        print(result.get_result()[0])
+        print(len(result.get_result()[3]))
+        print(len(result.get_result()[4]))
 
 
 

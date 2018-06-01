@@ -23,7 +23,7 @@ class AnnealingGlass(Annealer, Optimizer):
     model_input_length = 45
 
     def __init__(self, tg, restriction, steps=50000,
-                 save_states=False, save_preds=False):
+                 save_states=False, save_preds=False, path=None):
 
         self.idx_elem = []  # pick up non-zero indices
         self.state = [0] * self.model_input_length
@@ -34,7 +34,10 @@ class AnnealingGlass(Annealer, Optimizer):
         self.random()
 
         Annealer.__init__(self, initial_state=self.state)  # important!
-        Optimizer.__init__(self)
+        if path is None:
+            Optimizer.__init__(self)
+        else:
+            Optimizer.__init__(self, path=path)
 
         self.tg = tg
         self.copy_trategy = "slice"
