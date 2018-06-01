@@ -68,8 +68,10 @@ class App(QMainWindow, Ui_main_window):
 
         opt = self.opt_cb.currentText()
         amount = self.amount_sp.value()
+        tg = self.tg_dsb.value()
         print("Optimizer: {0:s}".format(opt))
         print("Amount: {0:d}".format(amount))
+        print("Tg: {0:6f}".format(tg))
 
         # chamada para a API
 

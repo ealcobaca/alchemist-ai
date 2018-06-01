@@ -63,21 +63,36 @@ class Ui_main_window(object):
         self.min_max_label = QtWidgets.QLabel(self.centralwidget)
         self.min_max_label.setGeometry(QtCore.QRect(20, 70, 421, 22))
         self.min_max_label.setObjectName("min_max_label")
+        self.min_max_label.setText("Search space limitation:")
 
         # opt_label
         self.opt_label = QtWidgets.QLabel(self.centralwidget)
         self.opt_label.setGeometry(QtCore.QRect(460, 100, 201, 22))
         self.opt_label.setObjectName("opt_label")
+        self.opt_label.setText("Optimizer")
 
         # amount
         self.amount_sp = QtWidgets.QSpinBox(self.centralwidget)
-        self.amount_sp.setGeometry(QtCore.QRect(460, 260, 201, 31))
+        self.amount_sp.setGeometry(QtCore.QRect(460, 270, 201, 31))
         self.amount_sp.setMinimum(1)
         self.amount_sp.setMaximum(10000)
         self.amount_sp.setObjectName("amount_sp")
         self.amount_label = QtWidgets.QLabel(self.centralwidget)
-        self.amount_label.setGeometry(QtCore.QRect(460, 230, 201, 22))
+        self.amount_label.setGeometry(QtCore.QRect(460, 240, 201, 22))
         self.amount_label.setObjectName("amount_label")
+        self.amount_label.setText("Amount:")
+
+        # tg
+        self.tg_dsb = QtWidgets.QDoubleSpinBox(self.centralwidget)
+        self.tg_dsb.setGeometry(QtCore.QRect(460, 200, 201, 31))
+        self.tg_dsb.setDecimals(6)
+        self.tg_dsb.setSingleStep(0.01)
+        self.tg_dsb.setObjectName("tg_dsb")
+        self.tg_dsb.setValue(0.5)
+        self.tg_label = QtWidgets.QLabel(self.centralwidget)
+        self.tg_label.setGeometry(QtCore.QRect(460, 170, 201, 22))
+        self.tg_label.setObjectName("tg_label")
+        self.tg_label.setText("TG:")
 
         # opt_cb
         self.opt_cb = QtWidgets.QComboBox(self.centralwidget)
@@ -90,6 +105,7 @@ class Ui_main_window(object):
         self.result_label = QtWidgets.QLabel(self.centralwidget)
         self.result_label.setGeometry(QtCore.QRect(20, 350, 641, 22))
         self.result_label.setObjectName("result_label")
+        self.result_label.setText("Results:")
         self.result_tb = QtWidgets.QTableWidget(self.centralwidget)
         self.result_tb.setGeometry(QtCore.QRect(20, 380, 641, 341))
         self.result_tb.setObjectName("result_table")
