@@ -8,89 +8,130 @@ Github...: https://github.com/ealcobaca
 Description:
 """
 
+import multiprocessing
 import numpy as np
 from simanneal import Annealer
 from .optimizer import Optimizer
 from .resultopt import ResultOpt
-import multiprocessing
-import copy
-from multiprocessing import Process
+from matplotlib.pyplot import plot
+from matplotlib.pyplot import show
+from matplotlib.pyplot import hist
 
 
-class AnnealingGlass(Annealer, Optimizer, Process):
+class AnnealingGlass(Annealer, Optimizer):
     """ TODO  """
     model_input_length = 45
 
-    def __init__(self, state, tg, qtd_distutb=1,
-                 perc_disturb=0.01, n_cpu=None):
-        Annealer.__init__(self, initial_state=state)  # important!
+    def __init__(self, tg, restriction, steps=50000,
+                 save_states=False, save_preds=False):
+
+        self.idx_elem = []  # pick up non-zero indices
+        self.state = [0] * self.model_input_length
+        self.restriction = restriction
+        for i in range(self.model_input_length):
+            if (self.restriction[i][0] >= 0) and (self.restriction[i][1] >= 0) and (self.restriction[i][1] > self.restriction[i][0]):
+                self.idx_elem.append(i)
+        self.random()
+
+        Annealer.__init__(self, initial_state=self.state)  # important!
         Optimizer.__init__(self)
-        Process.__init__(self)
 
         self.tg = tg
-        self.qtd_distutb = qtd_distutb
-        self.perc_disturb = perc_disturb
         self.copy_trategy = "slice"
-        self.states = state
+        self.steps = steps
 
-        if isinstance(self.states[0], list):
-            self.state = self.states[0]
-            self.pop = len(self.states)
-        else:
-            self.pop = 1
+        self.save_states = save_states
+        self.save_preds = save_preds
+        self.all_states = []
+        self.all_preds = []
+        if self.save_states:
+            self.all_states.append(self.state.copy())
 
-        if n_cpu is None:
-            self.n_cpu = multiprocessing.cpu_count()
-        else:
-            self.n_cpu = n_cpu
+    def minmax(self, value, i):
+        """ DOCS """
+        if self.restriction[i][0] <= value and value <= self.restriction[i][1]:
+            return True
+        return False
+
+    def is_possible(self, value, i):
+        """ DOCS """
+        if self.restriction[i][0] <= value and value <= self.restriction[i][1]:
+            return True
+        return False
+
+    @staticmethod
+    def rand(min_value, max_value):
+        """ DOCS """
+        return ((max_value - min_value) * np.random.rand()) + min_value
+
+    def random(self):
+        """ DOCS """
+        done = False
+        while done is False:
+            perc = 1
+
+            idxs = np.random.choice(self.idx_elem, len(self.idx_elem),
+                                    replace=False).tolist()
+            for idx in idxs:
+                if perc > self.min_(idx):
+                    if perc > self.restriction[idx][1]:
+                        new_value = self.rand(
+                            self.restriction[idx][0], self.restriction[idx][1])
+                    else:
+                        new_value = self.rand(
+                            perc, self.restriction[idx][0])
+                    perc = perc - new_value
+                else:
+                    new_value = 0
+                self.state[idx] = new_value
+
+            idxs = np.random.choice(self.idx_elem, len(self.idx_elem),
+                                    replace=False).tolist()
+            for idx in idxs:
+                if self.minmax(perc + self.state[idx], idx):
+                    new_value = perc + self.state[idx]
+                    self.state[idx] = new_value
+                    perc = perc - perc
+                    done = True
+                    break
+
+    def min_(self, i):
+        """ DOCS """
+        return self.restriction[i][0]
+
+    def max_(self, i):
+        """ DOCS """
+        return self.restriction[i][1]
 
     def move(self):
-        """Swaps two cities in the route."""
-
-        values = (np.random.rand(self.qtd_distutb)*2 - 1)*self.perc_disturb
-
-        ind = np.random.randint(self.model_input_length-1,
-                                size=self.qtd_distutb)
-        size = len(values)
-        for i in range(size):
-            if self.state[ind[i]] + values[i] >= 0:
-                self.state[ind[i]] += values[i]
-        self.state /= np.sum(self.state)
+        """ DOCS """
+        self.random()
+        if self.save_states:
+            self.all_states.append(self.state.copy())
+        # sum_state = sum(self.state)
+        # if abs(1 - sum_state) > 0.0000001:
+        #     print("Erro - soma diferente de 1")
+        #     print(sum_state)
+        # for i in self.idx_elem.copy():
+        #     if self.minmax(self.state[i], i) is False:
+        #         print("Erro - fora do intervalo")
 
     def energy(self):
         """Calculates the length of the route."""
         pred = self.predict(self.state)
+        if self.save_preds:
+            self.all_preds.append(pred)
+        if pred < 0:
+            pred = 100
         return np.abs(pred - self.tg)
 
     def run(self):
-        preds = []
-        energys = []
-        states = []
-        i = 0
+        """ DOCS """
+        state, energy = self.anneal()
+        pred = self.predict(state)
 
-        while i < self.pop:
-            if self.pop == 1:
-                self.state = self.states
-            else:
-                self.state = self.states[i]
+        result = ResultOpt(
+            type_opt='annealing',
+            result=[pred, energy, state, self.all_preds, self.all_states])
 
-            state, energy = self.anneal()
-            pred = self.predict(state)
-            i += 1
-
-            preds.append(pred[0])
-            energys.append(energy[0])
-            states.append(state.tolist())
-
-        result = ResultOpt(type_opt='annealing',
-                           result=[preds, energys, states])
         return result
-
-    def clone(self):
-        """TODO: Docstring for __cmp__.
-
-        :returns: TODO
-        """
-        obj = AnnealingGlass(self.state, self.tg, self.qtd_distutb,
-                             self.perc_disturb, self.pop, self.n_cpu)
-        return obj
