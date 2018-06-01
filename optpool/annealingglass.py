@@ -131,7 +131,7 @@ class AnnealingGlass(Annealer, Optimizer):
     def run(self):
         """ DOCS """
         state, energy = self.anneal()
-        pred = self.predict(state)
+        pred = self.predict(state)[0]
 
         result = ResultOpt(
             type_opt='annealing',

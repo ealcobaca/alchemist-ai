@@ -76,6 +76,7 @@ class Ui_main_window(object):
         self.amount_sp.setGeometry(QtCore.QRect(460, 270, 201, 31))
         self.amount_sp.setMinimum(1)
         self.amount_sp.setMaximum(10000)
+        self.amount_sp.setValue(1)
         self.amount_sp.setObjectName("amount_sp")
         self.amount_label = QtWidgets.QLabel(self.centralwidget)
         self.amount_label.setGeometry(QtCore.QRect(460, 240, 201, 22))
@@ -109,7 +110,7 @@ class Ui_main_window(object):
         self.result_tb = QtWidgets.QTableWidget(self.centralwidget)
         self.result_tb.setGeometry(QtCore.QRect(20, 380, 641, 341))
         self.result_tb.setObjectName("result_table")
-        self.result_tb.setColumnCount(45)
+        self.result_tb.setColumnCount(46)
         # self.result_tb.setRowCount(1)
 
         for i in range(len(Names.Chemical_Elemnts)):
@@ -119,6 +120,13 @@ class Ui_main_window(object):
             font.setItalic(True)
             item.setFont(font)
             item.setBackground(QtGui.QColor(114, 159, 207))
+
+        item = QtWidgets.QTableWidgetItem("TG")
+        self.result_tb.setHorizontalHeaderItem(i+1, item)
+        font = QtGui.QFont()
+        font.setItalic(True)
+        item.setFont(font)
+        item.setBackground(QtGui.QColor(114, 159, 207))
 
         # discard_btn
         self.discard_btn = QtWidgets.QPushButton(self.centralwidget)
