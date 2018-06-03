@@ -13,9 +13,6 @@ import numpy as np
 from simanneal import Annealer
 from .optimizer import Optimizer
 from .resultopt import ResultOpt
-from matplotlib.pyplot import plot
-from matplotlib.pyplot import show
-from matplotlib.pyplot import hist
 
 
 class AnnealingGlass(Annealer, Optimizer):

@@ -5,7 +5,9 @@ import sys, traceback
 import re
 from PyQt5.QtWidgets import (QApplication,
                              QMainWindow,
-                             QTableWidgetItem)
+                             QTableWidgetItem,
+                             QProgressBar,
+                             QFileDialog)
 from PyQt5.QtGui import QFont, QColor
 from gui import Ui_main_window
 sys.path.append("../")  # Adds higher directory to python modules path.
@@ -23,6 +25,9 @@ class App(QMainWindow, Ui_main_window):
 
         # Make some local modification ...
         self.tb_item = None
+        self.progress = QProgressBar(self)
+        self.progress.setGeometry(20, 780, 640, 20)
+        self.progress.setHidden(True)
 
         # Connect up the buttons
         self.run_btn.clicked.connect(self.run_btn_clicked)
@@ -31,7 +36,22 @@ class App(QMainWindow, Ui_main_window):
             self.min_max_table_itemDoubleClicked)
         self.discard_btn.clicked.connect(self.discard_btn_clicked)
         self.clean_all_btn.clicked.connect(self.clean_all_btn_clicked)
+        self.save_btn.clicked.connect(self.save_btn_clicked)
         self.show()
+
+    def save_btn_clicked(self):
+        print("Saving")
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(
+            self,
+            "QFileDialog.getSaveFileName()",
+            "",
+            "All Files (*);;csv Files (*.csv)", options=options)
+        if fileName:
+            with open(fileName, 'w') as file:
+                file.write(self.results_to_csv())
+            print(fileName)
 
     def clean_all_btn_clicked(self):
         self.discard_btn_clicked()
@@ -64,6 +84,7 @@ class App(QMainWindow, Ui_main_window):
         font.setItalic(True)
         item.setFont(font)
         item.setBackground(QColor(114, 159, 207))
+        self.progress.setValue(0)
 
     def min_max_table_itemChanged(self, item):
         col = item.column()
@@ -96,6 +117,24 @@ class App(QMainWindow, Ui_main_window):
 
         return colnames, rownames, matrix
 
+    def results_to_csv(self):
+        csv = ""
+        for j in range(self.result_tb.columnCount()):
+            item = self.result_tb.horizontalHeaderItem(j)
+            if j == (self.result_tb.columnCount()-1):
+                csv = csv + item.text() + "\n"
+            else:
+                csv = csv + item.text() + ","
+
+        for i in range(self.result_tb.rowCount()):
+            for j in range(self.result_tb.columnCount()):
+                item = self.result_tb.item(i, j)
+                if j == (self.result_tb.columnCount()-1):
+                    csv = csv + item.text() + "\n"
+                else:
+                    csv = csv + item.text() + ","
+        return csv
+
     def add_result_tb(self, vector):
         print("Added")
         row = self.result_tb.rowCount()
@@ -115,6 +154,10 @@ class App(QMainWindow, Ui_main_window):
         tg = self.tg_dsb.value()
         results = []
         _, _, matrix = self.table_to_matrix(self.min_max_table)
+        completed = 0
+        perc = 100/amount
+        self.progress.setValue(completed)
+        self.progress.setHidden(False)
         for i in range(amount):
             tsp = AnnealingGlass(tg=tg, steps=1000, restriction=matrix,
                                  save_preds=True, save_states=True,
@@ -128,6 +171,9 @@ class App(QMainWindow, Ui_main_window):
             self.add_result_tb(vector)
             results.append(result)
 
+            completed += perc
+            self.progress.setValue(completed)
+        self.progress.setHidden(True)
     def pso(self):
         print("Running SPO")
 
