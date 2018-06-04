@@ -7,13 +7,16 @@ from PyQt5.QtWidgets import (QApplication,
                              QMainWindow,
                              QTableWidgetItem,
                              QProgressBar,
-                             QFileDialog)
-from PyQt5.QtGui import QFont, QColor
+                             QFileDialog,
+                             QAction,
+                             QMenu)
+from PyQt5.QtGui import QFont, QColor, QIcon
 from gui import Ui_main_window
 sys.path.append("../")  # Adds higher directory to python modules path.
 from optpool import AnnealingGlass
 from PyQt5.QtCore import Qt
 from utilGui import Names
+from .hist import Hist
 
 
 class App(QMainWindow, Ui_main_window):
@@ -29,6 +32,23 @@ class App(QMainWindow, Ui_main_window):
         self.progress.setGeometry(20, 780, 640, 20)
         self.progress.setHidden(True)
 
+        self.menu_GlassG = self.menubar.addMenu('Glass G.')
+
+        # Visualization menubar
+
+        # Create vis action
+        self.menu_vis = QMenu("Visualization", self)
+        self.menubar.addMenu(self.menu_vis)
+        menu_vis_hist = QAction(QIcon(), '&Hist', self)
+        menu_vis_hist.setShortcut('Ctrl+V')
+        menu_vis_hist.setStatusTip(
+            'Apply histogram in each column the results')
+        menu_vis_hist.triggered.connect(self.menu_vis_hist)
+        self.menu_vis.addAction(menu_vis_hist)
+
+        self.menu_help = self.menubar.addMenu('Help')
+        self.menu_exit = self.menubar.addMenu('Exit')
+
         # Connect up the buttons
         self.run_btn.clicked.connect(self.run_btn_clicked)
         self.min_max_table.itemChanged.connect(self.min_max_table_itemChanged)
@@ -38,6 +58,10 @@ class App(QMainWindow, Ui_main_window):
         self.clean_all_btn.clicked.connect(self.clean_all_btn_clicked)
         self.save_btn.clicked.connect(self.save_btn_clicked)
         self.show()
+
+    def menu_vis_hist(self):
+        print("Hist")
+        Hist(parent=self)
 
     def save_btn_clicked(self):
         print("Saving")
@@ -101,14 +125,22 @@ class App(QMainWindow, Ui_main_window):
         self.tb_item = item.clone()
 
     @staticmethod
-    def table_to_matrix(tb):
+    def table_to_matrix(tb, flag=False):
         matrix = []
-        for i in range(tb.rowCount()):
-            mlin = []
-            for j in range(tb.columnCount()):
-                item = tb.item(i, j)
-                mlin.append(float(item.text()))
-            matrix.append(mlin)
+        if flag:
+            for i in range(tb.columnCount()):
+                mcol = []
+                for j in range(tb.rowCount()):
+                    item = tb.item(j, i)
+                    mcol.append(float(item.text()))
+                matrix.append(mcol)
+        else:
+            for i in range(tb.rowCount()):
+                mlin = []
+                for j in range(tb.columnCount()):
+                    item = tb.item(i, j)
+                    mlin.append(float(item.text()))
+                matrix.append(mlin)
 
         colnames = [tb.horizontalHeaderItem(i).text()
                     for i in range(tb.columnCount())]
