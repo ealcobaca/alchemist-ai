@@ -3,6 +3,7 @@
 
 import sys, traceback
 import re
+import numpy as np
 from PyQt5.QtWidgets import (QApplication,
                              QMainWindow,
                              QTableWidgetItem,
@@ -14,6 +15,7 @@ from PyQt5.QtGui import QFont, QColor, QIcon
 from gui import Ui_main_window
 sys.path.append("../")  # Adds higher directory to python modules path.
 from optpool import AnnealingGlass
+from optpool import PSO
 from PyQt5.QtCore import Qt
 from utilGui import Names
 from .hist import Hist
@@ -206,8 +208,38 @@ class App(QMainWindow, Ui_main_window):
             completed += perc
             self.progress.setValue(completed)
         self.progress.setHidden(True)
+
     def pso(self):
-        print("Running SPO")
+        print("Running PSO")
+        amount = self.amount_sp.value()
+        tg = self.tg_dsb.value()
+        _, _, mM = self.table_to_matrix(self.min_max_table)
+
+        completed = 0
+        perc = 100/amount
+        self.progress.setHidden(False)
+        self.progress.setValue(completed)
+        for i in range(amount):
+            completed += perc
+            self.progress.setValue(completed)
+
+            initialVectors = [np.random.rand(45).tolist()]
+            pso = PSO(
+                45, initialVectors, tg, mM, path="../models/ANN.h5")
+            result = pso.run()
+            results = result.get_result()
+            solucoes = results[0]
+            valores = results[1]
+            erros = results[2]
+
+            vector = solucoes[0]
+            vector.append(valores[0])
+            self.add_result_tb(vector)
+
+            print(solucoes)
+            print(erros)
+            print(valores)
+        self.progress.setHidden(True)
 
     def run_btn_clicked(self):
         """TODO: Docstring for run_btn_clicked.

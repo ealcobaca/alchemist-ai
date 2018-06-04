@@ -69,27 +69,27 @@ class Particle:
         for i in range(0,num_dimensions):
             self.position_i[i]=self.position_i[i]+self.velocity_i[i]
 
-            '''
-            # adjust maximum position if necessary
-            if self.position_i[i]>bounds[i][1]:
-                self.position_i[i]=bounds[i][1]
+            if(bounds[i][1] > bounds[i][0]):
+                # adjust maximum position if necessary
+                if self.position_i[i]>bounds[i][1]:
+                    self.position_i[i]=bounds[i][1]
 
-            # adjust minimum position if neseccary
-            if self.position_i[i] < bounds[i][0]:
-                self.position_i[i]=bounds[i][0]
-            '''
-            
-            # adjust maximum position if necessary
-            if self.position_i[i]>bounds[i][0]:
-                self.position_i[i]=bounds[i][0]
+                # adjust minimum position if neseccary
+                if self.position_i[i] < bounds[i][0]:
+                    self.position_i[i]=bounds[i][0]            
+            else:
+                # adjust maximum position if necessary
+                if self.position_i[i]>bounds[i][0]:
+                    self.position_i[i]=bounds[i][0]
 
-            # adjust minimum position if neseccary
-            if self.position_i[i] < bounds[i][1]:
-                self.position_i[i]=bounds[i][1]
+                # adjust minimum position if neseccary
+                if self.position_i[i] < bounds[i][1]:
+                    self.position_i[i]=bounds[i][1]
+          
         
          
         
-        summatory = sum(self.position_i)
+        summatory = sum(self.position_i) + 0.0000001
         '''
         is_ok = False
         while not is_ok:
@@ -103,8 +103,11 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None):
-        Optimizer.__init__(self)
+    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None, path=None):
+        if path is None:
+            Optimizer.__init__(self)
+        else:
+            Optimizer.__init__(self, path)
         global num_dimensions
         self.sizeVector = sizeVector
         self.target = target
