@@ -69,23 +69,23 @@ class Particle:
         for i in range(0,num_dimensions):
             self.position_i[i]=self.position_i[i]+self.velocity_i[i]
 
-            '''
-            # adjust maximum position if necessary
-            if self.position_i[i]>bounds[i][1]:
-                self.position_i[i]=bounds[i][1]
+            if(bounds[i][1] > bounds[i][0]):
+                # adjust maximum position if necessary
+                if self.position_i[i]>bounds[i][1]:
+                    self.position_i[i]=bounds[i][1]
 
-            # adjust minimum position if neseccary
-            if self.position_i[i] < bounds[i][0]:
-                self.position_i[i]=bounds[i][0]
-            '''
-            
-            # adjust maximum position if necessary
-            if self.position_i[i]>bounds[i][0]:
-                self.position_i[i]=bounds[i][0]
+                # adjust minimum position if neseccary
+                if self.position_i[i] < bounds[i][0]:
+                    self.position_i[i]=bounds[i][0]            
+            else:
+                # adjust maximum position if necessary
+                if self.position_i[i]>bounds[i][0]:
+                    self.position_i[i]=bounds[i][0]
 
-            # adjust minimum position if neseccary
-            if self.position_i[i] < bounds[i][1]:
-                self.position_i[i]=bounds[i][1]
+                # adjust minimum position if neseccary
+                if self.position_i[i] < bounds[i][1]:
+                    self.position_i[i]=bounds[i][1]
+          
         
          
         
