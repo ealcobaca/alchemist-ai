@@ -31,7 +31,7 @@ class App(QMainWindow, Ui_main_window):
         # Make some local modification ...
         self.tb_item = None
         self.progress = QProgressBar(self)
-        self.progress.setGeometry(20, 780, 640, 20)
+        self.progress.setGeometry(20, 790, 640, 20)
         self.progress.setHidden(True)
 
         self.menu_GlassG = self.menubar.addMenu('Glass G.')
@@ -48,6 +48,7 @@ class App(QMainWindow, Ui_main_window):
         menu_vis_hist.triggered.connect(self.menu_vis_hist)
         self.menu_vis.addAction(menu_vis_hist)
 
+        self.menu_help = self.menubar.addMenu('Options')
         self.menu_help = self.menubar.addMenu('Help')
         self.menu_exit = self.menubar.addMenu('Exit')
 
