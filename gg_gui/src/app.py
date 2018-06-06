@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, traceback
-import re
+import sys, traceback, re, csv
 import numpy as np
 from PyQt5.QtWidgets import (QApplication,
                              QMainWindow,
@@ -31,11 +30,16 @@ class App(QMainWindow, Ui_main_window):
         # Make some local modification ...
         self.tb_item = None
         self.progress = QProgressBar(self)
-        self.progress.setGeometry(20, 790, 640, 20)
+        self.progress.setGeometry(20, 800, 640, 20)
         self.progress.setHidden(True)
 
-        self.menu_GlassG = self.menubar.addMenu('Glass G.')
-
+        self.menu_glass = self.menubar.addMenu('Glass G.')
+        menu_open_result = QAction(QIcon(), '&Open Result', self)
+        menu_open_result.setShortcut('Ctrl+R')
+        menu_open_result.setStatusTip(
+            'Open a csv result file')
+        menu_open_result.triggered.connect(self.menu_open_result)
+        self.menu_glass.addAction(menu_open_result)
         # Visualization menubar
 
         # Create vis action
@@ -62,6 +66,25 @@ class App(QMainWindow, Ui_main_window):
         self.save_btn.clicked.connect(self.save_btn_clicked)
         self.show()
 
+    def menu_open_result(self):
+        print("Menu open result")
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(
+            self,
+            "QFileDialog.getOpenFileName()",
+            "",
+            "csv Files (*.csv);;All Files (*)",
+            options=options)
+        if fileName:
+            print(fileName)
+            with open(fileName, "r") as file:
+                reader = csv.reader(file, delimiter=",")
+                x = list(reader)
+                self.discard_btn_clicked()
+                for i in range(1, len(x)):
+                    self.add_result_tb(x[i])
+
     def menu_vis_hist(self):
         print("Hist")
         Hist(parent=self)
@@ -82,7 +105,7 @@ class App(QMainWindow, Ui_main_window):
 
     def clean_all_btn_clicked(self):
         self.discard_btn_clicked()
-        self.tg_dsb.setValue(0.5)
+        self.tg_dsb.setValue(700)
         self.amount_sp.setValue(1)
         for i in range(len(Names.Chemical_Elemnts)):
             for j in range(2):
@@ -186,7 +209,7 @@ class App(QMainWindow, Ui_main_window):
     def annealing(self):
         print("Running Annealing")
         amount = self.amount_sp.value()
-        tg = self.tg_dsb.value()
+        tg = self.to_normalized_tg(self.tg_dsb.value())
         results = []
         _, _, matrix = self.table_to_matrix(self.min_max_table)
         completed = 0
@@ -202,7 +225,7 @@ class App(QMainWindow, Ui_main_window):
             pred = result.get_result()[0]
             print(result.get_result()[0])
             vector = result.get_result()[2].copy()
-            vector.append(pred)
+            vector.append(self.to_real_tg(pred))
             self.add_result_tb(vector)
             results.append(result)
 
@@ -213,7 +236,7 @@ class App(QMainWindow, Ui_main_window):
     def pso(self):
         print("Running PSO")
         amount = self.amount_sp.value()
-        tg = self.tg_dsb.value()
+        tg = self.to_normalized_tg(self.tg_dsb.value())
         _, _, mM = self.table_to_matrix(self.min_max_table)
 
         completed = 0
@@ -234,13 +257,19 @@ class App(QMainWindow, Ui_main_window):
             erros = results[2]
 
             vector = solucoes[0]
-            vector.append(valores[0])
+            vector.append(self.to_real_tg(valores[0]))
             self.add_result_tb(vector)
 
             print(solucoes)
             print(erros)
             print(valores)
         self.progress.setHidden(True)
+
+    def to_normalized_tg(self, tg):
+        return tg/1400.0
+
+    def to_real_tg(self, tg):
+        return tg * 1400.0
 
     def run_btn_clicked(self):
         """TODO: Docstring for run_btn_clicked.
@@ -257,7 +286,7 @@ class App(QMainWindow, Ui_main_window):
 
             opt = self.opt_cb.currentText()
             amount = self.amount_sp.value()
-            tg = self.tg_dsb.value()
+            tg = self.to_normalized_tg(self.tg_dsb.value())
             print("Optimizer: {0:s}".format(opt))
             print("Amount: {0:d}".format(amount))
             print("Tg: {0:6f}".format(tg))

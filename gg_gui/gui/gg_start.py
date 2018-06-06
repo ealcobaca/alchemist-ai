@@ -57,9 +57,10 @@ class Ui_main_window(object):
         self.min_max_table.setHorizontalHeaderItem(1, item)
 
         for i in range(len(Names.Chemical_Elemnts)):
-            for j in range(2):
-                self.min_max_table.setItem(
-                    i, j, QtWidgets.QTableWidgetItem("0.0"))
+            self.min_max_table.setItem(
+                i, 0, QtWidgets.QTableWidgetItem("0.0"))
+            self.min_max_table.setItem(
+                i, 1, QtWidgets.QTableWidgetItem("1.0"))
         self.min_max_label = QtWidgets.QLabel(self.centralwidget)
         self.min_max_label.setGeometry(QtCore.QRect(20, 70, 421, 22))
         self.min_max_label.setObjectName("min_max_label")
@@ -86,10 +87,12 @@ class Ui_main_window(object):
         # tg
         self.tg_dsb = QtWidgets.QDoubleSpinBox(self.centralwidget)
         self.tg_dsb.setGeometry(QtCore.QRect(460, 200, 201, 31))
-        self.tg_dsb.setDecimals(6)
-        self.tg_dsb.setSingleStep(0.01)
+        self.tg_dsb.setMaximum(50000)
+        self.tg_dsb.setMinimum(0)
+        self.tg_dsb.setDecimals(0)
+        self.tg_dsb.setSingleStep(5)
         self.tg_dsb.setObjectName("tg_dsb")
-        self.tg_dsb.setValue(0.5)
+        self.tg_dsb.setValue(700)
         self.tg_label = QtWidgets.QLabel(self.centralwidget)
         self.tg_label.setGeometry(QtCore.QRect(460, 170, 201, 22))
         self.tg_label.setObjectName("tg_label")

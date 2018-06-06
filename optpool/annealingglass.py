@@ -23,7 +23,7 @@ class AnnealingGlass(Annealer, Optimizer):
                  save_states=False, save_preds=False, path=None):
 
         self.idx_elem = []  # pick up non-zero indices
-        self.state = [0] * self.model_input_length
+        self.state = [0.0] * self.model_input_length
         self.restriction = restriction
         for i in range(self.model_input_length):
             if (self.restriction[i][0] >= 0) and (self.restriction[i][1] >= 0) and (self.restriction[i][1] > self.restriction[i][0]):
