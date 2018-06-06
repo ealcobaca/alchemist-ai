@@ -16,9 +16,9 @@ import random
 from utilGui import Names
 
 
-class Hist(QDialog):
+class ScatterPlot(QDialog):
     def __init__(self, parent=None):
-        super(Hist, self).__init__(parent)
+        super(ScatterPlot, self).__init__(parent)
 
         self.parent = parent
 
@@ -35,20 +35,31 @@ class Hist(QDialog):
 
         self.group_gb = QGroupBox("Options")
 
-        self.item_lb = QLabel("Select the chemical elemnts:", self)
-        self.item_cb = QComboBox()
+        # first chemical elemnt
+        self.item1_lb = QLabel("Select the first chemical elemnt:", self)
+        self.item1_cb = QComboBox()
         for i in range(len(Names.Chemical_Elemnts)):
-            self.item_cb.addItem(Names.Chemical_Elemnts[i])
-        self.item_cb.activated.connect(self.item_cb_activated)
+            self.item1_cb.addItem(Names.Chemical_Elemnts[i])
+        self.item1_cb.activated.connect(self.item_cb_activated)
+
+        # second chemical element
+        self.item2_lb = QLabel("Select the second chemical elemnt:", self)
+        self.item2_cb = QComboBox()
+        for i in range(len(Names.Chemical_Elemnts)):
+            self.item2_cb.addItem(Names.Chemical_Elemnts[i])
+        self.item2_cb.activated.connect(self.item_cb_activated)
 
         vbox = QVBoxLayout()
-        vbox.addWidget(self.item_lb)
-        vbox.addWidget(self.item_cb)
+        vbox.addWidget(self.item1_lb)
+        vbox.addWidget(self.item1_cb)
+        vbox.addWidget(self.item2_lb)
+        vbox.addWidget(self.item2_cb)
         vbox.addStretch(1)
         self.group_gb.setLayout(vbox)
 
         # set the layout
         layout = QVBoxLayout()
+        # layout.setStretch(1, 10)
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
         layout.addWidget(self.group_gb)
@@ -58,7 +69,9 @@ class Hist(QDialog):
         self.show()
 
     def item_cb_activated(self, value):
-        print(Names.Chemical_Elemnts[value])
+        print(Names.Chemical_Elemnts[self.item1_cb.currentIndex()])
+        print(Names.Chemical_Elemnts[self.item2_cb.currentIndex()])
+
         # random data
         # data = [random.random() for i in range(10)]
         parent = self.parent
@@ -70,8 +83,20 @@ class Hist(QDialog):
         # create an axis
         ax = self.figure.add_subplot(1, 1, 1)
 
-        ax.hist(matrix[value], bins=5, density=True)
-        # ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+        value_1 = matrix[self.item1_cb.currentIndex()]
+        value_2 = matrix[self.item2_cb.currentIndex()]
+        name_1 = Names.Chemical_Elemnts[self.item1_cb.currentIndex()]
+        name_2 = Names.Chemical_Elemnts[self.item2_cb.currentIndex()]
 
+        x_real = value_1
+        y_real = value_2
+        ax.scatter(x_real, y_real, c='r', s=15,
+                   marker='s', alpha=0.5, label='Real')
+        ax.set_title('Scatter Plot', fontsize=12)
+        plt.xlabel(name_1, fontsize=12)
+        plt.ylabel(name_2, fontsize=12)
+        ax.legend()
+
+        # plt.legend()
         # refresh canvas
         self.canvas.draw()

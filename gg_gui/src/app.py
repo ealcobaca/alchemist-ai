@@ -18,6 +18,7 @@ from optpool import PSO
 from PyQt5.QtCore import Qt
 from utilGui import Names
 from .hist import Hist
+from .scatter import ScatterPlot
 
 
 class App(QMainWindow, Ui_main_window):
@@ -46,11 +47,18 @@ class App(QMainWindow, Ui_main_window):
         self.menu_vis = QMenu("Visualization", self)
         self.menubar.addMenu(self.menu_vis)
         menu_vis_hist = QAction(QIcon(), '&Hist', self)
-        menu_vis_hist.setShortcut('Ctrl+V')
+        menu_vis_hist.setShortcut('Ctrl+H')
         menu_vis_hist.setStatusTip(
-            'Apply histogram in each column the results')
+            'Apply histogram in each results column')
         menu_vis_hist.triggered.connect(self.menu_vis_hist)
         self.menu_vis.addAction(menu_vis_hist)
+
+        menu_vis_scatter = QAction(QIcon(), '&Scatter Plot', self)
+        menu_vis_scatter.setShortcut('Ctrl+M')
+        menu_vis_scatter.setStatusTip(
+            'Apply scatter plot in each column')
+        menu_vis_scatter.triggered.connect(self.menu_vis_scatter)
+        self.menu_vis.addAction(menu_vis_scatter)
 
         self.menu_help = self.menubar.addMenu('Options')
         self.menu_help = self.menubar.addMenu('Help')
@@ -84,6 +92,10 @@ class App(QMainWindow, Ui_main_window):
                 self.discard_btn_clicked()
                 for i in range(1, len(x)):
                     self.add_result_tb(x[i])
+
+    def menu_vis_scatter(self):
+        print("Scatter plot")
+        ScatterPlot(parent=self)
 
     def menu_vis_hist(self):
         print("Hist")
