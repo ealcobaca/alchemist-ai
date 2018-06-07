@@ -278,10 +278,10 @@ class App(QMainWindow, Ui_main_window):
         self.progress.setHidden(True)
 
     def to_normalized_tg(self, tg):
-        return tg/1400.0
+        return tg/1452.0
 
     def to_real_tg(self, tg):
-        return tg * 1400.0
+        return tg * 1452.0
 
     def run_btn_clicked(self):
         """TODO: Docstring for run_btn_clicked.
