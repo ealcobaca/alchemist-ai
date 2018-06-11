@@ -33,10 +33,10 @@ class Ui_main_window(object):
         self.min_max_table.setGeometry(QtCore.QRect(20, 100, 421, 192))
         self.min_max_table.setObjectName("min_max_table")
         self.min_max_table.setColumnCount(2)
-        self.min_max_table.setRowCount(45)
+        self.min_max_table.setRowCount(len(Names.Chemical_Compounds))
 
-        for i in range(len(Names.Chemical_Elemnts)):
-            item = QtWidgets.QTableWidgetItem(Names.Chemical_Elemnts[i])
+        for i in range(len(Names.Chemical_Compounds)):
+            item = QtWidgets.QTableWidgetItem(Names.Chemical_Compounds[i])
             self.min_max_table.setVerticalHeaderItem(i, item)
 
         item = QtWidgets.QTableWidgetItem("min")
@@ -56,7 +56,7 @@ class Ui_main_window(object):
         item.setBackground(QtGui.QColor(114, 159, 207))
         self.min_max_table.setHorizontalHeaderItem(1, item)
 
-        for i in range(len(Names.Chemical_Elemnts)):
+        for i in range(len(Names.Chemical_Compounds)):
             self.min_max_table.setItem(
                 i, 0, QtWidgets.QTableWidgetItem("0.0"))
             self.min_max_table.setItem(

@@ -119,7 +119,7 @@ class App(QMainWindow, Ui_main_window):
         self.discard_btn_clicked()
         self.tg_dsb.setValue(700)
         self.amount_sp.setValue(1)
-        for i in range(len(Names.Chemical_Elemnts)):
+        for i in range(len(Names.Chemical_Compounds)):
             for j in range(2):
                 self.min_max_table.setItem(
                     i, j, QTableWidgetItem("0.0"))
@@ -250,7 +250,7 @@ class App(QMainWindow, Ui_main_window):
         amount = self.amount_sp.value()
         tg = self.to_normalized_tg(self.tg_dsb.value())
         _, _, mM = self.table_to_matrix(self.min_max_table)
-
+        print(mM)
         completed = 0
         perc = 100/amount
         self.progress.setHidden(False)
