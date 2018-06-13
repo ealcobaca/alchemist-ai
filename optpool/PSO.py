@@ -69,27 +69,27 @@ class Particle:
         for i in range(0,num_dimensions):
             self.position_i[i]=self.position_i[i]+self.velocity_i[i]
 
-            if(bounds[i][1] > bounds[i][0]):
-                # adjust maximum position if necessary
-                if self.position_i[i]>bounds[i][1]:
-                    self.position_i[i]=bounds[i][1]
+            '''
+            # adjust maximum position if necessary
+            if self.position_i[i]>bounds[i][1]:
+                self.position_i[i]=bounds[i][1]
 
-                # adjust minimum position if neseccary
-                if self.position_i[i] < bounds[i][0]:
-                    self.position_i[i]=bounds[i][0]            
-            else:
-                # adjust maximum position if necessary
-                if self.position_i[i]>bounds[i][0]:
-                    self.position_i[i]=bounds[i][0]
+            # adjust minimum position if neseccary
+            if self.position_i[i] < bounds[i][0]:
+                self.position_i[i]=bounds[i][0]
+            '''
+            
+            # adjust maximum position if necessary
+            if self.position_i[i]>bounds[i][0]:
+                self.position_i[i]=bounds[i][0]
 
-                # adjust minimum position if neseccary
-                if self.position_i[i] < bounds[i][1]:
-                    self.position_i[i]=bounds[i][1]
-          
+            # adjust minimum position if neseccary
+            if self.position_i[i] < bounds[i][1]:
+                self.position_i[i]=bounds[i][1]
         
          
         
-        summatory = sum(self.position_i) + 0.0000001
+        summatory = sum(self.position_i)
         '''
         is_ok = False
         while not is_ok:
@@ -103,15 +103,23 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None, path=None):
-        if path is None:
-            Optimizer.__init__(self)
-        else:
-            Optimizer.__init__(self, path)
+    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None):
+        Optimizer.__init__(self)
         global num_dimensions
         self.sizeVector = sizeVector
         self.target = target
         self.max_min_comp = max_min_comp
+
+        if(type(self.max_min_comp)==dict):
+            mMs = []
+            for k in self.max_min_comp:
+                a = self.max_min_comp[k][0]
+                b = self.max_min_comp[k][1]
+                mM = [a,b]
+                mMs.append(mM)
+            self.max_min_comp = mMs
+
+        #print(self.max_min_comp)
 
         self.initialVectors = initialVectors
         if not isinstance(initialVectors[0], list):
