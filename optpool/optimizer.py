@@ -110,7 +110,8 @@ class Optimizer(object):
             matriz[indice] = compostoDic[composto]
         return matriz
 
-    def vector_to_dic(self, values, keys):
+    @classmethod
+    def vector_to_dic(cls, values, keys):
         dic = {}
         for value, key in zip(values, keys):
             dic[key] = value

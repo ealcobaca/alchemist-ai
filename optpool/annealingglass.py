@@ -31,7 +31,7 @@ class AnnealingGlass(Annealer, Optimizer):
         Annealer.__init__(self, initial_state=self.state)  # important!
 
         self.copy_trategy = "slice"
-        self.steps = 5000
+        self.steps = 50000
 
         self.save_states = save_states
         self.save_preds = save_preds

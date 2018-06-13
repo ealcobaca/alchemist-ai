@@ -226,7 +226,6 @@ class App(QMainWindow, Ui_main_window):
         results = []
         _, _, matrix = self.table_to_matrix(self.min_max_table)
         matrix = Optimizer.matrix_to_dic(matrix)
-        print(matrix)
         completed = 0
         perc = 100/amount
         self.progress.setValue(completed)
@@ -258,18 +257,21 @@ class App(QMainWindow, Ui_main_window):
         amount = self.amount_sp.value()
         tg = self.to_normalized_tg(self.tg_dsb.value())
         _, _, mM = self.table_to_matrix(self.min_max_table)
+        mM = Optimizer.matrix_to_dic(mM)
         print(mM)
         completed = 0
         perc = 100/amount
+
         self.progress.setHidden(False)
         self.progress.setValue(completed)
+
         for i in range(amount):
             completed += perc
             self.progress.setValue(completed)
 
-            initialVectors = [np.random.rand(45).tolist()]
+            initialVectors = [np.random.rand(len(mM)).tolist()]
             pso = PSO(
-                45, initialVectors, tg, mM, path="../models/ANN.h5")
+                len(mM), initialVectors, tg, mM, path="../models/ANN.h5")
             result = pso.run()
             results = result.get_result()
             solucoes = results[0]
@@ -282,7 +284,7 @@ class App(QMainWindow, Ui_main_window):
 
             print(solucoes)
             print(erros)
-            print(valores)
+            print(self.to_real_tg(valores[0]))
         self.progress.setHidden(True)
 
     def to_normalized_tg(self, tg):

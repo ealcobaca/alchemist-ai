@@ -20,8 +20,9 @@ import multiprocessing
 #--- COST FUNCTION ------------------------------------------------------------+
 
 # function we are attempting to optimize (minimize)
-def func1(x, target, predFunc):
+def func1(x, target, predFunc, keys):
     total=0
+    x = Optimizer.vector_to_dic(x, keys)
     total = predFunc(x)
     error = abs(total-target)
     return error, total
@@ -42,8 +43,8 @@ class Particle:
             self.position_i.append(x0[i])
 
     # evaluate current fitness
-    def evaluate(self,costFunc, target, predFunc):  
-        self.err_i, self.fit_i=costFunc(self.position_i, target, predFunc)
+    def evaluate(self,costFunc, target, predFunc, keys):  
+        self.err_i, self.fit_i=costFunc(self.position_i, target, predFunc, keys)
 
         # check to see if the current position is an individual best
         if self.err_i < self.err_best_i or self.err_best_i==-1:
@@ -53,8 +54,8 @@ class Particle:
     # update new particle velocity
     def update_velocity(self, pos_best_g):
         w=0.5       # constant inertia weight (how much to weigh the previous velocity)
-        c1=1        # cognative constant
-        c2=1        # social constant
+        c1=2        # cognative constant
+        c2=2        # social constant
 
         for i in range(0,num_dimensions):
             r1=random.random()
@@ -103,8 +104,13 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None):
-        Optimizer.__init__(self)
+    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None, path=None):
+        if path is None:
+            Optimizer.__init__(self, tg=target, min_max_dic=max_min_comp)
+        else:
+            Optimizer.__init__(self,
+                               tg=target, min_max_dic=max_min_comp, path=path)
+
         global num_dimensions
         self.sizeVector = sizeVector
         self.target = target
@@ -117,6 +123,7 @@ class PSO(Optimizer):
                 b = self.max_min_comp[k][1]
                 mM = [a,b]
                 mMs.append(mM)
+            self.keys = self.max_min_comp.keys()
             self.max_min_comp = mMs
 
         #print(self.max_min_comp)
@@ -141,8 +148,8 @@ class PSO(Optimizer):
         #x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
         #summatory = sum(x0)
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=100 #100
-        maxiter=100 #100
+        num_particles=200 #100
+        maxiter=1000 #100
         epsilon = 0.0000001
         
         solutions = []
@@ -170,7 +177,7 @@ class PSO(Optimizer):
             while iteration < maxiter and not stopCriterion:
                 # cycle through particles in swarm and evaluate fitness
                 for j in range(0,num_particles):
-                    swarm[j].evaluate(costFunc, self.target, self.predict)
+                    swarm[j].evaluate(costFunc, self.target, self.predict, self.keys)
     
                     # determine if current particle is the best (globally)
                     if swarm[j].err_i < err_best_g or err_best_g == -1:
@@ -192,6 +199,11 @@ class PSO(Optimizer):
                 iteration+=1
             #print(iteration)
     
+            self.pos_best_g = self.vector_to_dic(
+                self.pos_best_g, self.keys)
+            self.pos_best_g = self.compounddic2atomsfraction(
+                self.pos_best_g)
+            self.pos_best_g = self.dict_to_matrix(self.pos_best_g)
             solutions.append(self.pos_best_g)
             valuesFunction.append(fit_best_g)
             errors.append(err_best_g)
