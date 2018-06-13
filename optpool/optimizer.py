@@ -8,6 +8,7 @@ Github...: https://github.com/bapimentel, https://github.com/ealcobaca
 Description:
 """
 
+import re
 import numpy as np
 from keras.models import load_model
 import tensorflow as tf
@@ -17,7 +18,7 @@ class Optimizer(object):
     """
     TODO:
     """
-    AvailableCompounds = ['Ag2O', 'Al2O3', 'As2O3', 'As2O5', 'B2O3', 'BaO',
+    AVAILABLECOMPOUNDS = ['Ag2O', 'Al2O3', 'As2O3', 'As2O5', 'B2O3', 'BaO',
                           'Bi2O3', 'CaO', 'CdO', 'Ce2O3', 'CeO2', 'Cl', 'Cs2O',
                           'Cu2O', 'CuO', 'Er2O3', 'F', 'Fe2O3', 'Fe3O4', 'FeO',
                           'Ga2O3', 'Gd2O3', 'GeO', 'GeO2', 'I', 'K2O', 'La2O3',
@@ -36,18 +37,34 @@ class Optimizer(object):
                         "Nb", "Bi", "La", "Pb", "Zr", "Ti", "Mg", "Ba", "K",
                         "Ca", "Zn", "Li", "P", "Al", "Na", "B", "Si", "O"]
 
-    def __init__(self, path='models/ANN.h5'):
+    def __init__(self, tg, min_max_dic, seed=None, path='models/ANN.h5'):
         custom_objects = {'huber_loss': tf.losses.huber_loss}
         self.model = load_model(path, custom_objects=custom_objects)
+
+        self.tg = tg
+        self.min_max_dic = min_max_dic
+
+        if seed is not None:
+            np.random.seed(seed)
 
     def predict(self, example):
         """TODO: Docstring for fit.
         :returns: TODO
 
         """
-        example = self.dict2Matrix(example):
+        # print(example)
+        example = self.dict_to_matrix(example)
         pred = self.model.predict(np.array([example]))
         return pred[0]
+
+    @classmethod
+    def matrix_to_dic(cls, min_max):
+        dic_min_max = {}
+        for i in range(len(min_max)):
+            if min_max[i][1] >= min_max[i][0] and min_max[i][1] != 0:
+                dic_min_max[cls.AVAILABLECOMPOUNDS[i]] = min_max[i].copy()
+        return dic_min_max
+
 
     def compounddic2atomsfraction(self, compounds):
 
@@ -85,25 +102,28 @@ class Optimizer(object):
         return atomsF
 
     def dict_to_matrix(self, compostoDic):
+        compostoDic = self.compounddic2atomsfraction(compostoDic)
         matriz = [0.0]*len(self.Chemical_Elemnts)
         for composto in compostoDic:
             indice = self.Chemical_Elemnts.index(composto)
-            print(compostoDic[composto])
+            # print(compostoDic[composto])
             matriz[indice] = compostoDic[composto]
         return matriz
-
-    def matrix_to_dic(self, min_max):
-        dic_min_max = {}
-        for i in range(len(min_max)):
-            if min_max[i][0] >= min_max[i][1] and min_max
-            dic_min_max[self.AvailableCompounds[i]] = min_max[i].copy()
 
     def vector_to_dic(self, values, keys):
         dic = {}
         for value, key in zip(values, keys):
             dic[key] = value
-
         return dic
+
+    @classmethod
+    def dic_to_vector(cls, dic):
+        vector = [0]*len(cls.Chemical_Elemnts)
+        for key in dic.keys():
+            idx = cls.Chemical_Elemnts.index(key)
+            vector[idx] = dic[key]
+        return vector
+
 
     def run(self):
         """TODO: Docstring for run.
