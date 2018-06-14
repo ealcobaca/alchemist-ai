@@ -120,11 +120,16 @@ class App(QMainWindow, Ui_main_window):
         self.discard_btn_clicked()
         self.tg_dsb.setValue(700)
         self.amount_sp.setValue(1)
+        self.opt_cb.setCurrentIndex(1)
         for i in range(len(Names.Chemical_Compounds)):
             for j in range(2):
                 self.min_max_table.setItem(
                     i, j, QTableWidgetItem("0.0"))
-        self.opt_cb.setCurrentIndex(0)
+        for i in range(5):
+                self.min_max_table.setItem(
+                    i, j, QTableWidgetItem("0.0"))
+                self.min_max_table.setItem(
+                    i, j, QTableWidgetItem("1.0"))
 
 
     def discard_btn_clicked(self):
@@ -271,7 +276,10 @@ class App(QMainWindow, Ui_main_window):
 
             initialVectors = [np.random.rand(len(mM)).tolist()]
             pso = PSO(
-                len(mM), initialVectors, tg, mM, path="../models/ANN.h5")
+                sizeVector=len(mM),
+                max_min_comp=mM,
+                target=tg,
+                path="../models/ANN.h5")
             result = pso.run()
             results = result.get_result()
             solucoes = results[0]

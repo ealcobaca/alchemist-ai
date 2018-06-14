@@ -54,8 +54,8 @@ class Particle:
     # update new particle velocity
     def update_velocity(self, pos_best_g):
         w=0.5       # constant inertia weight (how much to weigh the previous velocity)
-        c1=2        # cognative constant
-        c2=2        # social constant
+        c1=0.0001        # cognative constant
+        c2=0.0001        # social constant
 
         for i in range(0,num_dimensions):
             r1=random.random()
@@ -69,27 +69,13 @@ class Particle:
     def update_position(self,bounds):
         for i in range(0,num_dimensions):
             self.position_i[i]=self.position_i[i]+self.velocity_i[i]
-
-            '''
             # adjust maximum position if necessary
-            if self.position_i[i]>bounds[i][1]:
-                self.position_i[i]=bounds[i][1]
-
-            # adjust minimum position if neseccary
             if self.position_i[i] < bounds[i][0]:
                 self.position_i[i]=bounds[i][0]
-            '''
-            
-            # adjust maximum position if necessary
-            if self.position_i[i]>bounds[i][0]:
-                self.position_i[i]=bounds[i][0]
 
             # adjust minimum position if neseccary
-            if self.position_i[i] < bounds[i][1]:
+            if self.position_i[i] > bounds[i][1]:
                 self.position_i[i]=bounds[i][1]
-        
-         
-        
         summatory = sum(self.position_i)
         '''
         is_ok = False
@@ -104,7 +90,7 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, initialVectors, target, max_min_comp, n_cpu=None, path=None):
+    def __init__(self, sizeVector, target, max_min_comp, n_cpu=None, path=None):
         if path is None:
             Optimizer.__init__(self, tg=target, min_max_dic=max_min_comp)
         else:
@@ -128,10 +114,10 @@ class PSO(Optimizer):
 
         #print(self.max_min_comp)
 
-        self.initialVectors = initialVectors
-        if not isinstance(initialVectors[0], list):
-            self.initialVectors = [initialVectors]
-        self.sizeSample = len(self.initialVectors)
+        # if not isinstance(initialVectors[0], list):
+            # self.initialVectors = [initialVectors]
+        # self.sizeSample = len(self.initialVectors)
+        self.sizeSample = 1
         
         if n_cpu is None:
             self.n_cpu = multiprocessing.cpu_count()
@@ -149,19 +135,18 @@ class PSO(Optimizer):
         #summatory = sum(x0)
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
         num_particles=200 #100
-        maxiter=1000 #100
+        maxiter=200 #100
         epsilon = 0.0000001
         
         solutions = []
         valuesFunction = []
         errors = []
         for i in range(self.sizeSample):
-            print('Amostra '+str(i+1))
             self.pos_best_g = 0
-            x0 = self.initialVectors[i]
-            summatory = sum(x0)
-            x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-            num_dimensions=len(x0)
+            # x0 = self.initialVectors[i]
+            # summatory = sum(x0)
+            # x0 = [x0[i]/summatory for i in range(self.sizeVector)]
+            num_dimensions=len(self.max_min_comp)
             err_best_g=-1                   # best error for group
             pos_best_g=[]                   # best position for group
             fit_best_g=-1
@@ -169,6 +154,8 @@ class PSO(Optimizer):
             # establish the swarm
             swarm=[]
             for ii in range(0,num_particles):
+                x0 = [np.random.uniform(i[0], i[1], 1)[0]
+                      for i in self.max_min_comp]
                 swarm.append(Particle(x0))
     
             # begin optimization loop
