@@ -40,6 +40,9 @@ class AnnealingGlass(Annealer, Optimizer):
         if self.save_states:
             self.all_states.append(self.state.copy())
 
+        self.ranges = {key: (min_max_dic[key][1] - min_max_dic[key][0])
+                       for key in min_max_dic}
+
     @staticmethod
     def rand(min_value, max_value):
         """ DOCS """
@@ -53,40 +56,18 @@ class AnnealingGlass(Annealer, Optimizer):
                 self.min_max_dic[key][1])
         return self.state
 
-    # def random(self):
-    #     """ DOCS """
-    #     done = False
-    #     while done is False:
-    #         perc = 1
-    #
-    #         idxs = np.random.choice(self.idx_elem, len(self.idx_elem),
-    #                                 replace=False).tolist()
-    #         for idx in idxs:
-    #             if perc > self.min_(idx):
-    #                 if perc > self.restriction[idx][1]:
-    #                     new_value = self.rand(
-    #                         self.restriction[idx][0], self.restriction[idx][1])
-    #                 else:
-    #                     new_value = self.rand(
-    #                         perc, self.restriction[idx][0])
-    #                 perc = perc - new_value
-    #             else:
-    #                 new_value = 0
-    #             self.state[idx] = new_value
-    #
-    #         idxs = np.random.choice(self.idx_elem, len(self.idx_elem),
-    #                                 replace=False).tolist()
-    #         for idx in idxs:
-    #             if self.minmax(perc + self.state[idx], idx):
-    #                 new_value = perc + self.state[idx]
-    #                 self.state[idx] = new_value
-    #                 perc = perc - perc
-    #                 done = True
-    #                 break
-
     def move(self):
         """ DOCS """
-        self.random()
+        # self.random()
+        for key in self.state:
+            max_perc = 0.1 * self.ranges[key]
+            delta = np.random.uniform(-max_perc, max_perc, 1)[0]
+            new = self.state[key] + delta
+            if new < self.min_max_dic[key][0]:
+                new = self.min_max_dic[key][0]
+            elif new > self.min_max_dic[key][1]:
+                new = self.min_max_dic[key][1]
+            self.state[key] = new
         if self.save_states:
             self.all_states.append(self.state.copy())
 

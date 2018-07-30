@@ -60,7 +60,7 @@ class ScatterPlot(QDialog):
         self.sd_dsb.setMaximum(1000)
         self.sd_dsb.setMinimum(0)
         self.sd_dsb.setSingleStep(5)
-        self.sd_dsb.setValue(100)
+        self.sd_dsb.setValue(50)
 
         # number of samples
         self.sample_lb = QLabel("Sample amount:", self)
@@ -68,7 +68,7 @@ class ScatterPlot(QDialog):
         self.sample_sb.setMaximum(50000)
         self.sample_sb.setMinimum(0)
         self.sample_sb.setSingleStep(10)
-        self.sample_sb.setValue(30000)
+        self.sample_sb.setValue(1000)
 
         layout = QGridLayout()
         # layout.setColumnStretch(1, 4)
@@ -103,10 +103,11 @@ class ScatterPlot(QDialog):
         index_predicted_target = 47
 
         r = Reader()
-        data = r.get_data('../data/traindata.csv')
+        data = r.get_data('../data/testdata.csv')
 
         sd = self.sd_dsb.value()
         TG = self.parent.tg_dsb.value()
+        print(TG)
         data2 = []
 
         for i in range(len(data)):
@@ -119,6 +120,7 @@ class ScatterPlot(QDialog):
         for i in range(len(data)):
             TG_data = data[i][index_target]
             if TG - sd <= TG_data <= TG + sd:
+                print(TG_data)
                 vectors.append(data2[i])
             if len(vectors) == self.sample_sb.value():
                 break

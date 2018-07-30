@@ -15,6 +15,7 @@ from gui import Ui_main_window
 sys.path.append("../")  # Adds higher directory to python modules path.
 from optpool import AnnealingGlass
 from optpool import PSO
+from optpool import RandomOpt
 from optpool import Optimizer
 from PyQt5.QtCore import Qt
 from utilGui import Names
@@ -125,12 +126,6 @@ class App(QMainWindow, Ui_main_window):
             for j in range(2):
                 self.min_max_table.setItem(
                     i, j, QTableWidgetItem("0.0"))
-        for i in range(5):
-                self.min_max_table.setItem(
-                    i, j, QTableWidgetItem("0.0"))
-                self.min_max_table.setItem(
-                    i, j, QTableWidgetItem("1.0"))
-
 
     def discard_btn_clicked(self):
         print("Discard")
@@ -223,6 +218,37 @@ class App(QMainWindow, Ui_main_window):
             item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
             self.result_tb.setItem(
                 row, i, item)
+
+    def random(self):
+        print("Running Random")
+        amount = self.amount_sp.value()
+        tg = self.to_normalized_tg(self.tg_dsb.value())
+        results = []
+        _, _, matrix = self.table_to_matrix(self.min_max_table)
+        matrix = Optimizer.matrix_to_dic(matrix)
+        completed = 0
+        perc = 100/amount
+        self.progress.setValue(completed)
+        self.progress.setHidden(False)
+        for i in range(amount):
+            tsp = RandomOpt(tg=tg, min_max_dic=matrix, path="../models/ANN.h5")
+            result = tsp.run()
+            print()
+            pred = result.get_result()[0]
+            print(result.get_result()[0])
+            vector = result.get_result()[2].copy()
+            vector = Optimizer.dic_to_vector(vector)
+            print(vector)
+            print(sum(vector))
+            erro = result.get_result()[1]
+            print(erro)
+            vector.append(self.to_real_tg(pred))
+            self.add_result_tb(vector)
+            results.append(result)
+
+            completed += perc
+            self.progress.setValue(completed)
+        self.progress.setHidden(True)
 
     def annealing(self):
         print("Running Annealing")
@@ -327,6 +353,9 @@ class App(QMainWindow, Ui_main_window):
                 self.annealing()
             elif opt == "PSO":
                 self.pso()
+            elif opt == "Random":
+                print("calling")
+                self.random()
 
         except Exception as inst:
             print("\n#################### Error ####################")

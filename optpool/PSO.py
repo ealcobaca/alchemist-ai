@@ -86,7 +86,7 @@ class Particle:
             if float(self.position_i[44])/float(summatory) > 0.1:
                 is_ok = True
         '''
-        
+        summatory += 0.00000001
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
@@ -134,8 +134,8 @@ class PSO(Optimizer):
         #x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
         #summatory = sum(x0)
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=200 #100
-        maxiter=200 #100
+        num_particles=250 #100
+        maxiter=1000 #100
         epsilon = 0.0000001
         
         solutions = []

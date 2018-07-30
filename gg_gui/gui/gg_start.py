@@ -104,6 +104,7 @@ class Ui_main_window(object):
         self.opt_cb.setObjectName("opt_cb")
         self.opt_cb.addItem("Annealing")
         self.opt_cb.addItem("PSO")
+        self.opt_cb.addItem("Random")
 
         # result_tb
         self.result_label = QtWidgets.QLabel(self.centralwidget)

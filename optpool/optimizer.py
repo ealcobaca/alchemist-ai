@@ -53,8 +53,8 @@ class Optimizer(object):
 
         """
         # print(example)
-        example = self.dict_to_matrix(example)
-        pred = self.model.predict(np.array([example]))
+        example = np.asarray([self.dict_to_matrix(example)])
+        pred = self.model.predict(example)
         return pred[0]
 
     @classmethod
