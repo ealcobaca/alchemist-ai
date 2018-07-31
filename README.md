@@ -8,3 +8,4 @@ This is a library to execute a pool of optimizers algorithm that aims to search 
 
 See also the list of [contributors](https://github.com/ealcobaca/Glass-Generator/graphs/contributors) who participated in this project.
 
+
