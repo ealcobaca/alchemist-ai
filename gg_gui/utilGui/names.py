@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 class Names():
-    Chemical_Elemnts = ["Cd", "Yb", "Cs", "N", "Mn", "S", "Ce", "Er", "I",
-                        "Mo", "Cl", "As", "Ga", "Cu", "Sn", "Ag", "Ta", "Y",
-                        "Gd", "Ge", "V", "Fe", "W", "F", "Sb", "Sr", "Te",
-                        "Nb", "Bi", "La", "Pb", "Zr", "Ti", "Mg", "Ba", "K",
-                        "Ca", "Zn", "Li", "P", "Al", "Na", "B", "Si", "O"]
+    Chemical_Elemnts = ["Yb", "Pb", "Ca", "Ti", "Mo", "Sn", "Cd", "Ag", "La",
+                        "Cs", "W", "Sb", "Ta", "V", "Fe", "Bi", "Ce", "Nb",
+                        "Cu", "I", "B", "Te", "Al", "Zr", "Gd", "Na", "Ga",
+                        "Cl", "S", "Si", "O", "F", "Mn", "Ba", "K", "Zn",
+                        "N", "Li", "Ge", "Y", "Sr", "P", "Mg", "Er", "As"]
     Chemical_Compounds = ['Ag2O', 'Al2O3', 'As2O3', 'As2O5', 'B2O3', 'BaO',
                           'Bi2O3', 'CaO', 'CdO', 'Ce2O3', 'CeO2', 'Cl', 'Cs2O',
                           'Cu2O', 'CuO', 'Er2O3', 'F', 'Fe2O3', 'Fe3O4', 'FeO',

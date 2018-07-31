@@ -78,29 +78,36 @@ result = result.get_result()
 
 Y = np.array([i['SiO'] for i in result[4]])
 X = np.array([i['Al2O3'] for i in result[4]])
-C = np.array([i[0] for i in result[3]])
+C = np.array([i[0]*1452 for i in result[3]])
 
-fig, axs = plt.subplots(2, 2)
+fig, axs = plt.subplots(1, 2)
 
-#axs[0, 0].imshow(np.random.random((100, 100)))
-axs[0, 1].imshow(np.random.random((100, 100)))
-axs[1, 1].imshow(np.random.random((100, 100)))
+axs[0].set_title('Al2O3_SiO_O Search', fontsize=20)
+axs[0].set_xlabel('Al2O3')
+axs[0].set_ylabel('SiO')
 
+im1 = axs[0].scatter(X,Y, c=C, cmap='viridis_r')
+fig.colorbar(im1, ax=axs[0])
 
-axs[0,0].set_title('Al2O3_SiO_O', fontsize=20)
-axs[0,0].set_xlabel('Al2O3')
-axs[0,0].set_ylabel('SiO')
+#####################################################################
+axs[1].set_title('Al2O3_SiO_O Scatter Plot', fontsize=20)
+axs[1].set_xlabel('Al2O3')
+axs[1].set_ylabel('SiO')
 
-im1 = axs[0,0].scatter(X,Y, c=C, cmap='viridis_r')
-fig.colorbar(im1, ax=axs[0,0])
 
 values = [compounddic2atomsfraction(i) for i in result[4]]
 YY = np.array([i['Si'] for i in values])
 XX = np.array([i['Al'] for i in values])
-im1 = axs[1,0].scatter(XX,YY, c=C, cmap='viridis_r')
-fig.colorbar(im1, ax=axs[1,0])
+im2 = axs[1].scatter(XX, YY, c=C, cmap='viridis_r')
+fig.colorbar(im2, ax=axs[1])
 
 plt.show()
+
+#####################################################################
+
+# mod = load_model('ANNTg.h5', custom_objects=custom_objects)
+# predNorm = model.predict(X).reshape(Ynorm.shape)
+
 
 # if __name__ == "__main__":
 #    main()

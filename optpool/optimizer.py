@@ -31,11 +31,18 @@ class Optimizer(object):
                           'TeO3', 'Ti2O3', 'TiO', 'TiO2', 'V2O3', 'V2O5',
                           'VO2', 'VO6', 'WO3', 'Y2O3', 'Yb2O3', 'ZnO', 'ZrO2']
 
-    Chemical_Elemnts = ["Cd", "Yb", "Cs", "N", "Mn", "S", "Ce", "Er", "I",
-                        "Mo", "Cl", "As", "Ga", "Cu", "Sn", "Ag", "Ta", "Y",
-                        "Gd", "Ge", "V", "Fe", "W", "F", "Sb", "Sr", "Te",
-                        "Nb", "Bi", "La", "Pb", "Zr", "Ti", "Mg", "Ba", "K",
-                        "Ca", "Zn", "Li", "P", "Al", "Na", "B", "Si", "O"]
+    # Chemical_Elemnts = ["Cd", "Yb", "Cs", "N", "Mn", "S", "Ce", "Er", "I",
+    #                     "Mo", "Cl", "As", "Ga", "Cu", "Sn", "Ag", "Ta", "Y",
+    #                     "Gd", "Ge", "V", "Fe", "W", "F", "Sb", "Sr", "Te",
+    #                     "Nb", "Bi", "La", "Pb", "Zr", "Ti", "Mg", "Ba", "K",
+    #                     "Ca", "Zn", "Li", "P", "Al", "Na", "B", "Si", "O"]
+    #
+    Chemical_Elemnts = ["Yb", "Pb", "Ca", "Ti", "Mo", "Sn", "Cd", "Ag", "La",
+                        "Cs", "W", "Sb", "Ta", "V", "Fe", "Bi", "Ce", "Nb",
+                        "Cu", "I", "B", "Te", "Al", "Zr", "Gd", "Na", "Ga",
+                        "Cl", "S", "Si", "O", "F", "Mn", "Ba", "K", "Zn",
+                        "N", "Li", "Ge", "Y", "Sr", "P", "Mg", "Er", "As"]
+
 
     def __init__(self, tg, min_max_dic, seed=None, path='models/ANN.h5'):
         custom_objects = {'huber_loss': tf.losses.huber_loss}
@@ -132,3 +139,5 @@ class Optimizer(object):
 
         """
         return []
+
+
