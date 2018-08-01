@@ -71,7 +71,7 @@ restriction = [[0.0, 0.0], [0.0, 1.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0],
 
 matrix = {'Al2O3': [0.0, 1.0], 'SiO': [0.0, 1.0], 'SiO2': [0.0, 1.0]}
 matrix = {'Al2O3': [0.0, 1.0], 'SiO': [0.0, 1.0]}
-tsp = AnnealingGlass(tg=0.6887, min_max_dic=matrix, save_preds=True, save_states=True)
+tsp = AnnealingGlass(tg=1200/1452.0, min_max_dic=matrix, save_preds=True, save_states=True)
 
 result = tsp.run()
 result = result.get_result()
@@ -83,23 +83,25 @@ C = np.array([i[0]*1452 for i in result[3]])
 fig, axs = plt.subplots(1, 2)
 
 axs[0].set_title('Al2O3_SiO_O Search', fontsize=20)
-axs[0].set_xlabel('Al2O3')
-axs[0].set_ylabel('SiO')
+axs[0].set_xlabel('Al2O3 mols')
+axs[0].set_ylabel('SiO mols')
 
 im1 = axs[0].scatter(X,Y, c=C, cmap='viridis_r')
-fig.colorbar(im1, ax=axs[0])
+cbar = fig.colorbar(im1, ax=axs[0])
+cbar.set_label('TG')
 
 #####################################################################
-axs[1].set_title('Al2O3_SiO_O Scatter Plot', fontsize=20)
-axs[1].set_xlabel('Al2O3')
-axs[1].set_ylabel('SiO')
 
+axs[1].set_title('Al2O3_SiO_O Scatter Plot', fontsize=20)
+axs[1].set_xlabel('Al2O3 atomos')
+axs[1].set_ylabel('SiO atomos')
 
 values = [compounddic2atomsfraction(i) for i in result[4]]
 YY = np.array([i['Si'] for i in values])
 XX = np.array([i['Al'] for i in values])
 im2 = axs[1].scatter(XX, YY, c=C, cmap='viridis_r')
-fig.colorbar(im2, ax=axs[1])
+cbar = fig.colorbar(im2, ax=axs[1])
+cbar.set_label('TG')
 
 plt.show()
 
@@ -111,5 +113,3 @@ plt.show()
 
 # if __name__ == "__main__":
 #    main()
-
-
