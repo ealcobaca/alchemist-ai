@@ -31,14 +31,12 @@ class AnnealingGlass(Annealer, Optimizer):
         Annealer.__init__(self, initial_state=self.state)  # important!
 
         self.copy_trategy = "slice"
-        self.steps = 50000
+        self.steps = 5000
 
         self.save_states = save_states
         self.save_preds = save_preds
         self.all_states = []
         self.all_preds = []
-        if self.save_states:
-            self.all_states.append(self.state.copy())
 
         self.ranges = {key: (min_max_dic[key][1] - min_max_dic[key][0])
                        for key in min_max_dic}
@@ -59,23 +57,36 @@ class AnnealingGlass(Annealer, Optimizer):
     def move(self):
         """ DOCS """
         # self.random()
-        for key in self.state:
-            max_perc = 0.1 * self.ranges[key]
-            delta = np.random.uniform(-max_perc, max_perc, 1)[0]
-            new = self.state[key] + delta
-            if new < self.min_max_dic[key][0]:
-                new = self.min_max_dic[key][0]
-            elif new > self.min_max_dic[key][1]:
-                new = self.min_max_dic[key][1]
-            self.state[key] = new
-        if self.save_states:
-            self.all_states.append(self.state.copy())
+        aux = self.state.copy()
+        flag = True
+        while(flag == True):
+            self.state = aux.copy()
+            for key in self.state:
+                max_perc = 0.1 * self.ranges[key]
+                delta = np.random.uniform(-max_perc, max_perc, 1)[0]
+                new = self.state[key] + delta
+                if new < self.min_max_dic[key][0]:
+                    new = self.min_max_dic[key][0]
+                elif new > self.min_max_dic[key][1]:
+                    new = self.min_max_dic[key][1]
+                self.state[key] = new
+            aux2 = [self.state[i] for i in self.state]
+            flag=False
+            if np.sum(aux2) == 0:
+                flag = True
 
+        
     def energy(self):
         """Calculates the length of the route."""
         pred = self.predict(self.state)
+        if np.isnan(pred):
+            print("NAN")
+            print(pred)
+            print(self.state)
         if self.save_preds:
             self.all_preds.append(pred)
+        if self.save_states:
+            self.all_states.append(self.state.copy())
         if pred < 0:
             pred = 100
         return np.abs(pred - self.tg)
