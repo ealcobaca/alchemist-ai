@@ -134,9 +134,9 @@ class PSO(Optimizer):
         #x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
         #summatory = sum(x0)
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=10 #100
-        maxiter=5000 #100
-        epsilon = 0.0001
+        num_particles=100 #100
+        maxiter=500 #100
+        epsilon = 0.1
         #print(self.target)
         solutions = []
         valuesFunction = []
@@ -161,6 +161,7 @@ class PSO(Optimizer):
             # begin optimization loop
             iteration=0
             stopCriterion = False
+            is_ok = False
             while iteration < maxiter and not stopCriterion:
                 # cycle through particles in swarm and evaluate fitness
                 for j in range(0,num_particles):
@@ -174,10 +175,12 @@ class PSO(Optimizer):
                         if err_best_g/self.target < epsilon:
                           print(err_best_g/self.target)
                           stopCriterion = True
+                          is_ok = True
+                          break
     
                 # cycle through swarm and update velocities and position
                 for j in range(0,num_particles):
-                    is_ok = False
+                    #is_ok = False
                     while not is_ok:
                         swarm[j].update_velocity(self.pos_best_g)
                         #swarm[j].update_position(bounds)
