@@ -219,6 +219,19 @@ class App(QMainWindow, Ui_main_window):
             self.result_tb.setItem(
                 row, i, item)
 
+    def sort_result_tb(self, matrix):
+        n_col = len(matrix[0])
+        matrix_sorted = sorted(matrix,key=lambda x: x[n_col-1])
+        print([m[n_col-1] for m in matrix_sorted])
+        matrix_reduced = []
+        self.discard_btn_clicked()
+        for m in matrix_sorted:
+            m_reduced = m[0:n_col-1]
+            matrix_reduced.append(m_reduced)
+            print(m_reduced)
+            self.add_result_tb(m_reduced)        
+
+
     def random(self):
         print("Running Random")
         amount = self.amount_sp.value()
@@ -261,6 +274,7 @@ class App(QMainWindow, Ui_main_window):
         perc = 100/amount
         self.progress.setValue(completed)
         self.progress.setHidden(False)
+        matrix_results = []
         for i in range(amount):
             tsp = AnnealingGlass(tg=tg, min_max_dic=matrix,
                                  save_preds=True, save_states=True,
@@ -279,8 +293,13 @@ class App(QMainWindow, Ui_main_window):
             self.add_result_tb(vector)
             results.append(result)
 
+            vector2 = vector
+            vector2.append(erro)
+            matrix_results.append(vector2)
+
             completed += perc
             self.progress.setValue(completed)
+        self.sort_result_tb(matrix_results)
         self.progress.setHidden(True)
 
     def pso(self):
@@ -295,6 +314,8 @@ class App(QMainWindow, Ui_main_window):
 
         self.progress.setHidden(False)
         self.progress.setValue(completed)
+
+        matrix = []
 
         for i in range(amount):
             completed += perc
@@ -313,12 +334,16 @@ class App(QMainWindow, Ui_main_window):
             erros = results[2]
 
             vector = solucoes[0]
-            vector.append(self.to_real_tg(valores[0]))
+            vector.append(self.to_real_tg(valores[0]))            
             self.add_result_tb(vector)
+            vector2 = vector
+            vector2.append(erros[0])
+            matrix.append(vector2)
 
             print(solucoes)
             print(erros)
             print(self.to_real_tg(valores[0]))
+        self.sort_result_tb(matrix)
         self.progress.setHidden(True)
 
     def to_normalized_tg(self, tg):
