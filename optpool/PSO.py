@@ -136,7 +136,7 @@ class PSO(Optimizer):
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
         num_particles=100 #100
         maxiter=500 #100
-        epsilon = 0.1
+        epsilon = 0.03
         #print(self.target)
         solutions = []
         valuesFunction = []
