@@ -190,11 +190,10 @@ class PSO(Optimizer):
                 iteration+=1
             #print(iteration)
     
-            self.pos_best_g = self.vector_to_dic(
-                self.pos_best_g, self.keys)
-            self.pos_best_g = self.compounddic2atomsfraction(
-                self.pos_best_g)
-            self.pos_best_g = self.dict_to_matrix(self.pos_best_g)
+            self.pos_best_g = self.vector_to_dic(self.pos_best_g, self.keys)
+            #self.pos_best_g = self.compounddic2atomsfraction(
+            #    self.pos_best_g)
+            self.pos_best_g = self.dic_to_vector_compound(self.pos_best_g)
             solutions.append(self.pos_best_g)
             valuesFunction.append(fit_best_g)
             errors.append(err_best_g)

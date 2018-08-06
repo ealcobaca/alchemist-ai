@@ -95,7 +95,7 @@ class AnnealingGlass(Annealer, Optimizer):
         """ DOCS """
         state, energy = self.anneal()
         pred = self.predict(state)[0]
-        state = self.compounddic2atomsfraction(state)
+        #state = self.compounddic2atomsfraction(state)
 
         result = ResultOpt(
             type_opt='annealing',

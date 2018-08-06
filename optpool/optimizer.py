@@ -132,6 +132,14 @@ class Optimizer(object):
             vector[idx] = dic[key]
         return vector
 
+    @classmethod
+    def dic_to_vector_compound(cls, dic):
+        vector = [0]*len(cls.AVAILABLECOMPOUNDS)
+        for key in dic.keys():
+            idx = cls.AVAILABLECOMPOUNDS.index(key)
+            vector[idx] = dic[key]
+        return vector
+
 
     def run(self):
         """TODO: Docstring for run.

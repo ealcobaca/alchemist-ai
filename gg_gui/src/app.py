@@ -74,6 +74,7 @@ class App(QMainWindow, Ui_main_window):
         self.discard_btn.clicked.connect(self.discard_btn_clicked)
         self.clean_all_btn.clicked.connect(self.clean_all_btn_clicked)
         self.save_btn.clicked.connect(self.save_btn_clicked)
+        self.clean_all_btn_clicked()
         self.show()
 
     def menu_open_result(self):
@@ -119,23 +120,34 @@ class App(QMainWindow, Ui_main_window):
 
     def clean_all_btn_clicked(self):
         self.discard_btn_clicked()
-        self.tg_dsb.setValue(700)
-        self.amount_sp.setValue(1)
+        #self.tg_dsb.setValue(700)
+        self.tg_dsb.setValue(1100)
+        #self.amount_sp.setValue(1)
+        self.amount_sp.setValue(3)
         self.opt_cb.setCurrentIndex(1)
         for i in range(len(Names.Chemical_Compounds)):
             for j in range(2):
                 self.min_max_table.setItem(
                     i, j, QTableWidgetItem("0.0"))
+        self.min_max_table.setItem(
+                    1, 1, QTableWidgetItem("1.0"))
+        self.min_max_table.setItem(
+                    55, 1, QTableWidgetItem("1.0"))
+        self.min_max_table.setItem(
+                    56, 1, QTableWidgetItem("1.0"))
 
     def discard_btn_clicked(self):
         print("Discard")
         self.result_tb.clear()
-        self.result_tb.setColumnCount(46)
+        #self.result_tb.setColumnCount(46)
+        self.result_tb.setColumnCount(len(Names.Chemical_Compounds)+1)
         self.result_tb.setRowCount(0)
 
-        for i in range(len(Names.Chemical_Elemnts)):
-            item = QTableWidgetItem(Names.Chemical_Elemnts[i])
-            self.result_tb.setHorizontalHeaderItem(i, item)
+        #for i in range(len(Names.Chemical_Elemnts)):
+        #    item = QTableWidgetItem(Names.Chemical_Elemnts[i])
+        for i in range(len(Names.Chemical_Compounds)):
+            item = QTableWidgetItem(Names.Chemical_Compounds[i])
+            self.result_tb.setHorizontalHeaderItem(i, item)            
             font = QFont()
             font.setItalic(True)
             item.setFont(font)
@@ -222,13 +234,14 @@ class App(QMainWindow, Ui_main_window):
     def sort_result_tb(self, matrix):
         n_col = len(matrix[0])
         matrix_sorted = sorted(matrix,key=lambda x: x[n_col-1])
-        print([m[n_col-1] for m in matrix_sorted])
+        #print([m[n_col-1] for m in matrix_sorted])
+        #print(matrix)
         matrix_reduced = []
         self.discard_btn_clicked()
         for m in matrix_sorted:
             m_reduced = m[0:n_col-1]
             matrix_reduced.append(m_reduced)
-            print(m_reduced)
+            #print(m_reduced)
             self.add_result_tb(m_reduced)        
 
 
@@ -284,7 +297,8 @@ class App(QMainWindow, Ui_main_window):
             pred = result.get_result()[0]
             print(result.get_result()[0])
             vector = result.get_result()[2].copy()
-            vector = Optimizer.dic_to_vector(vector)
+            #vector = Optimizer.dic_to_vector(vector)
+            vector = Optimizer.dic_to_vector_compound(vector)
             print(vector)
             print(sum(vector))
             erro = result.get_result()[1]
@@ -340,9 +354,9 @@ class App(QMainWindow, Ui_main_window):
             vector2.append(erros[0])
             matrix.append(vector2)
 
-            print(solucoes)
-            print(erros)
-            print(self.to_real_tg(valores[0]))
+            #print(solucoes)
+            #print(erros)
+            #print(self.to_real_tg(valores[0]))
         self.sort_result_tb(matrix)
         self.progress.setHidden(True)
 
