@@ -22,6 +22,9 @@ from utilGui import Names
 from .hist import Hist
 from .scatter import ScatterPlot
 
+from sklearn.ensemble import RandomForestRegressor
+from util import Reader
+
 
 class App(QMainWindow, Ui_main_window):
     def __init__(self):
@@ -29,6 +32,12 @@ class App(QMainWindow, Ui_main_window):
         QMainWindow.__init__(self)
         # Set up the user interface from designer
         self.setupUi(self)
+
+        #Train RF
+        self.usa_RF = True
+        self.model_rf = None
+        if self.usa_RF:
+            self.init_clf()
 
         # Make some local modification ...
         self.tb_item = None
@@ -340,7 +349,8 @@ class App(QMainWindow, Ui_main_window):
                 sizeVector=len(mM),
                 max_min_comp=mM,
                 target=tg,
-                path="../models/ANN.h5")
+                path="../models/ANN.h5",
+                clf=self.model_rf)
             result = pso.run()
             results = result.get_result()
             solucoes = results[0]
@@ -406,4 +416,19 @@ class App(QMainWindow, Ui_main_window):
             traceback.print_exc(file=sys.stdout)
             print("-"*60)
             print("\n##############################################")
+
+    def init_clf(self):
+        r = Reader()
+        #file_name = "C:/Users/Bruno Pimentel/Downloads/Glass/data/traindata.csv"
+        file_name = "/home/bruno/Projetos/Glass-Generator/data/traindata.csv"
+        data = r.get_data(file_name)
+        data_train = []
+        data_target = []
+        for d in data:
+            data_train.append(d[0:(len(data[0])-4)])
+            data_target.append(d[len(data[0])-3])
+        clf = RandomForestRegressor(n_estimators= 100, min_samples_leaf=1, max_depth=1000, random_state=0)
+        print('Treinando RF...')
+        self.model_rf = clf.fit(data_train, data_target)
+        #predictions = clf.predict(X_test)
 

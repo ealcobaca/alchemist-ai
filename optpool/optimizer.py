@@ -13,6 +13,9 @@ import numpy as np
 from keras.models import load_model
 import tensorflow as tf
 
+from sklearn.ensemble import RandomForestRegressor
+from util import Reader
+
 
 class Optimizer(object):
     """
@@ -44,9 +47,10 @@ class Optimizer(object):
                         "N", "Li", "Ge", "Y", "Sr", "P", "Mg", "Er", "As"]
 
 
-    def __init__(self, tg, min_max_dic, seed=None, path='models/ANN.h5'):
+    def __init__(self, tg, min_max_dic, seed=None, path='models/ANN.h5', clf=None):
         custom_objects = {'huber_loss': tf.losses.huber_loss}
         self.model = load_model(path, custom_objects=custom_objects)
+        self.model_rf = 0
 
         self.tg = tg
         self.min_max_dic = min_max_dic
@@ -54,15 +58,42 @@ class Optimizer(object):
         if seed is not None:
             np.random.seed(seed)
 
+        #self.init_clf()
+        if clf is not None:
+            self.model = clf
+
+    def init_clf(self):
+        r = Reader()
+        #file_name = "C:/Users/Bruno Pimentel/Downloads/Glass/data/traindata.csv"
+        file_name = "/home/bruno/Projetos/Glass-Generator/data/traindata.csv"
+        data = r.get_data(file_name)
+        data_train = []
+        data_target = []
+        for d in data:
+            data_train.append(d[0:(len(data[0])-4)])
+            data_target.append(d[len(data[0])-3])
+        clf = RandomForestRegressor(n_estimators= 10, min_samples_leaf=1, max_depth=1000, random_state=0)
+        print('Treinando RF...')
+        self.model_rf = clf.fit(data_train, data_target)
+        #predictions = clf.predict(X_test)
+
     def predict(self, example):
         """TODO: Docstring for fit.
         :returns: TODO
-
         """
-        # print(example)
+        #print(example)
+
         example = np.asarray([self.dict_to_matrix(example)])
         pred = self.model.predict(example)
+
+        # ANN ####################################################        
+        #pred = self.model.predict(example)
+
+        # RF ####################################################
+        #pred = self.model_rf.predict(example)
+
         return pred[0]
+
 
     @classmethod
     def matrix_to_dic(cls, min_max):
