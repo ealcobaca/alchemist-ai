@@ -39,7 +39,7 @@ class Particle:
         self.fit_i = -1
 
         for i in range(0,num_dimensions):
-            self.velocity_i.append(random.uniform(-0.5,0.5))
+            self.velocity_i.append(random.uniform(-10,10))
             self.position_i.append(x0[i])
 
     # evaluate current fitness
@@ -53,9 +53,9 @@ class Particle:
 
     # update new particle velocity
     def update_velocity(self, pos_best_g):
-        w=0.5       # constant inertia weight (how much to weigh the previous velocity)
-        c1=0.0001        # cognative constant
-        c2=0.0001        # social constant
+        w=20       # constant inertia weight (how much to weigh the previous velocity)
+        c1=50        # cognative constant
+        c2=20        # social constant
 
         for i in range(0,num_dimensions):
             r1=random.random()
@@ -134,9 +134,9 @@ class PSO(Optimizer):
         #x0 = [random.random() for l in range(self.sizeVector)]   # initial starting location [x1,x2...]
         #summatory = sum(x0)
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
-        num_particles=200 #100
-        maxiter=500 #100
-        epsilon = 0.01
+        num_particles=50000 #100
+        maxiter=50000 #100
+        epsilon = 0.01        
         #print(self.target)
         solutions = []
         valuesFunction = []
@@ -162,21 +162,36 @@ class PSO(Optimizer):
             iteration=0
             stopCriterion = False
             is_ok = False
+            max_iter_equal = maxiter/5
+            count_iter_equal = 0
+            err_best_g_before = err_best_g
             while iteration < maxiter and not stopCriterion:
                 # cycle through particles in swarm and evaluate fitness
                 for j in range(0,num_particles):
                     swarm[j].evaluate(costFunc, self.target, self.predict, self.keys)
+
+                    err_best_g_before = err_best_g
     
                     # determine if current particle is the best (globally)
                     if swarm[j].err_i < err_best_g or err_best_g == -1:
-                        self.pos_best_g=list(swarm[j].position_i)
+                        self.pos_best_g=list(swarm[j].position_i)                        
                         err_best_g=float(swarm[j].err_i)
                         fit_best_g=float(swarm[j].fit_i)
+                        #print(err_best_g)
                         if err_best_g/self.target < epsilon:
                           print(err_best_g/self.target)
                           stopCriterion = True
                           is_ok = True
                           break
+                    if err_best_g == err_best_g_before:
+                        count_iter_equal = count_iter_equal + 1
+                        print(err_best_g)
+                    else:
+                        count_iter_equal = 0
+                    if count_iter_equal == max_iter_equal:
+                        stopCriterion = True
+                        is_ok = True
+                        break
     
                 # cycle through swarm and update velocities and position
                 for j in range(0,num_particles):
