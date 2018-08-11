@@ -23,7 +23,7 @@ import multiprocessing
 def func1(x, target, predFunc, keys):
     total=0
     x = Optimizer.vector_to_dic(x, keys)
-    total = predFunc(x)
+    total = predFunc(x, target)
     error = abs(total-target)
     return error, total
 
@@ -90,17 +90,18 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, target, max_min_comp, n_cpu=None, path=None, clf=None):
+    def __init__(self, sizeVector, target, max_min_comp, n_cpu=None, path=None, clf_rf=None, limiar_rf=None):
         if path is None:
-            Optimizer.__init__(self, tg=target, min_max_dic=max_min_comp)
+            Optimizer.__init__(self, tg=target, min_max_dic=max_min_comp, clf_rf=clf_rf, limiar_rf=limiar_rf)
         else:
             Optimizer.__init__(self,
-                               tg=target, min_max_dic=max_min_comp, path=path)
+                               tg=target, min_max_dic=max_min_comp, path=path, clf_rf=clf_rf, limiar_rf=limiar_rf)
 
         global num_dimensions
         self.sizeVector = sizeVector
         self.target = target
         self.max_min_comp = max_min_comp
+        self.limiar_rf = limiar_rf
 
         if(type(self.max_min_comp)==dict):
             mMs = []
@@ -162,7 +163,7 @@ class PSO(Optimizer):
             iteration=0
             stopCriterion = False
             is_ok = False
-            max_iter_equal = maxiter/5
+            max_iter_equal = maxiter/100# maxiter/5
             count_iter_equal = 0
             err_best_g_before = err_best_g
             while iteration < maxiter and not stopCriterion:
@@ -178,14 +179,14 @@ class PSO(Optimizer):
                         err_best_g=float(swarm[j].err_i)
                         fit_best_g=float(swarm[j].fit_i)
                         #print(err_best_g)
-                        if err_best_g/self.target < epsilon:
-                          print(err_best_g/self.target)
-                          stopCriterion = True
-                          is_ok = True
-                          break
+                    if err_best_g/self.target < epsilon:
+                      #print(err_best_g/self.target)
+                      stopCriterion = True
+                      is_ok = True
+                      break
                     if err_best_g == err_best_g_before:
                         count_iter_equal = count_iter_equal + 1
-                        print(err_best_g)
+                        print(err_best_g_before, count_iter_equal)
                     else:
                         count_iter_equal = 0
                     if count_iter_equal == max_iter_equal:

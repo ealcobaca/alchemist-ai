@@ -34,10 +34,11 @@ class App(QMainWindow, Ui_main_window):
         self.setupUi(self)
 
         #Train RF
-        self.usa_RF = False
+        self.usa_RF = True
         self.model_rf = None
-        if self.usa_RF:
-            self.init_clf()
+        self.limiar_rf = 1100.0
+        if self.usa_RF:            
+            self.init_clf(self.limiar_rf)
 
         # Make some local modification ...
         self.tb_item = None
@@ -141,9 +142,7 @@ class App(QMainWindow, Ui_main_window):
         self.min_max_table.setItem(
                     1, 1, QTableWidgetItem("1.0"))
         self.min_max_table.setItem(
-                    55, 1, QTableWidgetItem("1.0"))
-        self.min_max_table.setItem(
-                    56, 1, QTableWidgetItem("1.0"))
+                    54, 1, QTableWidgetItem("1.0"))
 
     def discard_btn_clicked(self):
         print("Discard")
@@ -172,8 +171,8 @@ class App(QMainWindow, Ui_main_window):
 
     def min_max_table_itemChanged(self, item):
         col = item.column()
-        print("[ItemChanged] item={0:s}, col={1:d}".format(
-            item.text(), col))
+        #print("[ItemChanged] item={0:s}, col={1:d}".format(
+            #item.text(), col))
         if re.match("^\d+?\.\d+?$", item.text()) is None:
             print("Not float")
             item.setText(self.tb_item.text())
@@ -350,7 +349,8 @@ class App(QMainWindow, Ui_main_window):
                 max_min_comp=mM,
                 target=tg,
                 path="../models/ANN.h5",
-                clf=self.model_rf)
+                clf_rf=self.model_rf,
+                limiar_rf=self.limiar_rf)
             result = pso.run()
             results = result.get_result()
             solucoes = results[0]
@@ -417,7 +417,7 @@ class App(QMainWindow, Ui_main_window):
             print("-"*60)
             print("\n##############################################")
 
-    def init_clf(self):
+    def init_clf(self, limiar):
         r = Reader()
         #file_name = "C:/Users/Bruno Pimentel/Downloads/Glass/data/traindata.csv"
         file_name = "/home/bruno/Projetos/Glass-Generator/data/traindata.csv"
@@ -425,9 +425,11 @@ class App(QMainWindow, Ui_main_window):
         data_train = []
         data_target = []
         for d in data:
-            data_train.append(d[0:(len(data[0])-4)])
-            data_target.append(d[len(data[0])-3])
-        clf = RandomForestRegressor(n_estimators= 100, min_samples_leaf=1, max_depth=1000, random_state=0)
+            if d[len(data[0])-4] >= limiar:
+                data_train.append(d[0:(len(data[0])-4)])
+                data_target.append(d[len(data[0])-3])
+        print(len(data_train))
+        clf = RandomForestRegressor(n_estimators= 1000, min_samples_leaf=1, max_depth=1000, random_state=0)
         print('Treinando RF...')
         self.model_rf = clf.fit(data_train, data_target)
         #predictions = clf.predict(X_test)

@@ -78,7 +78,7 @@ class AnnealingGlass(Annealer, Optimizer):
         
     def energy(self):
         """Calculates the length of the route."""
-        pred = self.predict(self.state)
+        pred = self.predict(self.state, self.tg)
         if np.isnan(pred):
             print("NAN")
             print(pred)
@@ -94,7 +94,7 @@ class AnnealingGlass(Annealer, Optimizer):
     def run(self):
         """ DOCS """
         state, energy = self.anneal()
-        pred = self.predict(state)[0]
+        pred = self.predict(state, self.tg)[0]
         #state = self.compounddic2atomsfraction(state)
 
         result = ResultOpt(
