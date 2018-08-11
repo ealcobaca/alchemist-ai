@@ -21,6 +21,7 @@ class Optimizer(object):
     """
     TODO:
     """
+    '''
     AVAILABLECOMPOUNDS = ['Ag2O', 'Al2O3', 'As2O3', 'As2O5', 'B2O3', 'BaO',
                           'Bi2O3', 'CaO', 'CdO', 'Ce2O3', 'CeO2', 'Cl', 'Cs2O',
                           'Cu2O', 'CuO', 'Er2O3', 'F', 'Fe2O3', 'Fe3O4', 'FeO',
@@ -31,6 +32,20 @@ class Optimizer(object):
                           'P2O5', 'Pb3O4', 'PbO', 'PbO2', 'SO2', 'SO3',
                           'Sb2O3', 'Sb2O5', 'SbO2', 'SiO', 'SiO2', 'Sn2O3',
                           'SnO', 'SnO2', 'SrO', 'Ta2O3', 'Ta2O5', 'TeO2',
+                          'TeO3', 'Ti2O3', 'TiO', 'TiO2', 'V2O3', 'V2O5',
+                          'VO2', 'VO6', 'WO3', 'Y2O3', 'Yb2O3', 'ZnO', 'ZrO2']
+    '''
+
+    AVAILABLECOMPOUNDS = ['Ag2O', 'Al2O3', 'As2O3', 'As2O5', 'B2O3', 'BaO',
+                          'Bi2O3', 'CaO', 'CdO', 'Ce2O3', 'CeO2', 'Cl', 'Cs2O',
+                          'Cu2O', 'CuO', 'Er2O3', 'F', 'Fe2O3', 'Fe3O4', 'FeO',
+                          'Ga2O3', 'Gd2O3', 'GeO2', 'I', 'K2O', 'La2O3',
+                          'Li2O', 'MgO', 'Mn2O3', 'Mn2O7', 'Mn3O4', 'MnO',
+                          'MnO2', 'Mo2O3', 'Mo2O5', 'MoO', 'MoO2', 'MoO3', 'N',
+                          'N2O5', 'NO2', 'Na2O', 'Nb2O3', 'Nb2O5', 'P2O3',
+                          'P2O5', 'Pb3O4', 'PbO', 'PbO2', 'SO2', 'SO3',
+                          'Sb2O3', 'Sb2O5', 'SbO2', 'SiO2', 'Sn2O3',
+                          'SnO', 'SnO2', 'SrO', 'Ta2O3', 'Ta2O5',
                           'TeO3', 'Ti2O3', 'TiO', 'TiO2', 'V2O3', 'V2O5',
                           'VO2', 'VO6', 'WO3', 'Y2O3', 'Yb2O3', 'ZnO', 'ZrO2']
 
@@ -47,10 +62,11 @@ class Optimizer(object):
                         "N", "Li", "Ge", "Y", "Sr", "P", "Mg", "Er", "As"]
 
 
-    def __init__(self, tg, min_max_dic, seed=None, path='models/ANN.h5', clf=None):
+    def __init__(self, tg, min_max_dic, seed=None, path='models/ANN.h5', clf_rf=None, limiar_rf=1200):
         custom_objects = {'huber_loss': tf.losses.huber_loss}
         self.model = load_model(path, custom_objects=custom_objects)
-        self.model_rf = 0
+        self.model_rf = clf_rf
+        self.limiar_rf = limiar_rf
 
         self.tg = tg
         self.min_max_dic = min_max_dic
@@ -59,8 +75,8 @@ class Optimizer(object):
             np.random.seed(seed)
 
         #self.init_clf()
-        if clf is not None:
-            self.model = clf
+        #if clf is not None:
+        #    self.model = clf
 
     def init_clf(self):
         r = Reader()
@@ -77,20 +93,27 @@ class Optimizer(object):
         self.model_rf = clf.fit(data_train, data_target)
         #predictions = clf.predict(X_test)
 
-    def predict(self, example):
+    def predict(self, example, target):
         """TODO: Docstring for fit.
         :returns: TODO
         """
         #print(example)
 
         example = np.asarray([self.dict_to_matrix(example)])
-        pred = self.model.predict(example)
-
-        # ANN ####################################################        
-        #pred = self.model.predict(example)
-
-        # RF ####################################################
-        #pred = self.model_rf.predict(example)
+        if self.model_rf is None:
+            #print('model_rf = None')
+            # ANN ####################################################
+            pred = self.model.predict(example)
+        else:
+            #print(self.limiar_rf)
+            target = target*1452.0
+            if target < self.limiar_rf:# 1200.0:
+                # ANN ####################################################        
+                pred = self.model.predict(example)
+            else:
+                # RF ####################################################
+                pred = self.model_rf.predict(example)
+                #print('RF')
 
         return pred[0]
 
