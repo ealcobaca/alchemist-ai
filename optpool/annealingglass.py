@@ -13,13 +13,15 @@ import numpy as np
 from simanneal import Annealer
 from .optimizer import Optimizer
 from .resultopt import ResultOpt
+import sys
+import time
 
 
 class AnnealingGlass(Annealer, Optimizer):
     """ TODO  """
     model_input_length = 45
 
-    def __init__(self, tg, min_max_dic, seed=None,
+    def __init__(self, tg, min_max_dic, seed=None, maxit=50000, budget=None,
                  save_states=False, save_preds=False, path=None):
 
         if path is None:
@@ -31,7 +33,11 @@ class AnnealingGlass(Annealer, Optimizer):
         Annealer.__init__(self, initial_state=self.state)  # important!
 
         self.copy_trategy = "slice"
-        self.steps = 20000
+        self.steps = maxit
+        self.budget = budget
+        if budget != None:
+            self.t1 = time.clock()
+            maxit=sys.maxsize
 
         self.save_states = save_states
         self.save_preds = save_preds
@@ -87,6 +93,10 @@ class AnnealingGlass(Annealer, Optimizer):
             self.all_preds.append(pred)
         if self.save_states:
             self.all_states.append(self.state.copy())
+        if self.budget != None:
+            t2 = time.clock()
+            if t2-self.t1 > self.budget:
+                self.set_user_exit(None, None)
         if pred < 0:
             pred = 100
         return np.abs(pred - self.tg)
