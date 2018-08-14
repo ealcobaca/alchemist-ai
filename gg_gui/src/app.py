@@ -34,7 +34,7 @@ class App(QMainWindow, Ui_main_window):
         self.setupUi(self)
 
         #Train RF
-        self.usa_RF = True
+        self.usa_RF = False
         self.model_rf = None
         self.limiar_rf = 1100.0
         if self.usa_RF:            
