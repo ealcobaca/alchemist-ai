@@ -17,6 +17,7 @@ from optpool import ResultOpt
 from optpool import Optimizer
 import multiprocessing
 import time
+import sys
 
 #--- COST FUNCTION ------------------------------------------------------------+
 
@@ -91,7 +92,7 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, target, max_min_comp, n_cpu=None, path=None, clf_rf=None, limiar_rf=None):
+    def __init__(self, sizeVector, target, max_min_comp, n_cpu=None, path=None, clf_rf=None, limiar_rf=None, budget=None):
         if path is None:
             Optimizer.__init__(self, tg=target, min_max_dic=max_min_comp, clf_rf=clf_rf, limiar_rf=limiar_rf)
         else:
@@ -103,6 +104,7 @@ class PSO(Optimizer):
         self.target = target
         self.max_min_comp = max_min_comp
         self.limiar_rf = limiar_rf
+        self.budget = budget
 
         if(type(self.max_min_comp)==dict):
             mMs = []
@@ -125,6 +127,9 @@ class PSO(Optimizer):
             self.n_cpu = multiprocessing.cpu_count()
         else:
             self.n_cpu = n_cpu
+
+        if budget == None:
+            self.budget=sys.maxsize
         
     def run(self):
         global num_dimensions
@@ -189,7 +194,7 @@ class PSO(Optimizer):
                       break
                     if err_best_g == err_best_g_before:
                         count_iter_equal = count_iter_equal + 1
-                        print(err_best_g_before, count_iter_equal)
+                        #print(err_best_g_before, count_iter_equal)
                     else:
                         count_iter_equal = 0
                     if count_iter_equal == max_iter_equal:
@@ -198,8 +203,9 @@ class PSO(Optimizer):
                         break
                     t1 = time.clock()
                     delta_t = t1-t0
-                    #print(delta_t)
-                    if delta_t >= max_time:
+                    print(delta_t)
+                    #print(self.budget)
+                    if delta_t >= self.budget:
                         print(delta_t)
                         stopCriterion = True
                         is_ok = True
