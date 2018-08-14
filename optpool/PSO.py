@@ -16,6 +16,7 @@ import numpy as np
 from optpool import ResultOpt
 from optpool import Optimizer
 import multiprocessing
+import time
 
 #--- COST FUNCTION ------------------------------------------------------------+
 
@@ -137,11 +138,13 @@ class PSO(Optimizer):
         #x0 = [x0[i]/summatory for i in range(self.sizeVector)]
         num_particles=50000 #100
         maxiter=50000 #100
-        epsilon = 0.01        
+        epsilon = 0.01  
+        max_time = 15.0      
         #print(self.target)
         solutions = []
         valuesFunction = []
         errors = []
+        t0 = time.clock()
         for i in range(self.sizeSample):
             self.pos_best_g = 0
             # x0 = self.initialVectors[i]
@@ -163,7 +166,7 @@ class PSO(Optimizer):
             iteration=0
             stopCriterion = False
             is_ok = False
-            max_iter_equal = maxiter/100# maxiter/5
+            max_iter_equal = maxiter/5# maxiter/5
             count_iter_equal = 0
             err_best_g_before = err_best_g
             while iteration < maxiter and not stopCriterion:
@@ -193,6 +196,15 @@ class PSO(Optimizer):
                         stopCriterion = True
                         is_ok = True
                         break
+                    t1 = time.clock()
+                    delta_t = t1-t0
+                    #print(delta_t)
+                    if delta_t >= max_time:
+                        print(delta_t)
+                        stopCriterion = True
+                        is_ok = True
+                        break
+                #print(err_best_g, iteration)
     
                 # cycle through swarm and update velocities and position
                 for j in range(0,num_particles):
