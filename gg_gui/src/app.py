@@ -350,8 +350,7 @@ class App(QMainWindow, Ui_main_window):
                 target=tg,
                 path="../models/ANN.h5",
                 clf_rf=self.model_rf,
-                limiar_rf=self.limiar_rf,
-                budget=5)
+                limiar_rf=self.limiar_rf)
             result = pso.run()
             results = result.get_result()
             solucoes = results[0]
