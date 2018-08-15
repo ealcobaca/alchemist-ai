@@ -3,4 +3,4 @@ from optpool.annealingglass import AnnealingGlass
 from optpool.optimizer import Optimizer
 from optpool.resultopt import ResultOpt
 from optpool.PSO import PSO
-from optpool.random import RandomOpt
+from optpool.randomglass import RandomGlass

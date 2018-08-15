@@ -15,7 +15,7 @@ from gui import Ui_main_window
 sys.path.append("../")  # Adds higher directory to python modules path.
 from optpool import AnnealingGlass
 from optpool import PSO
-from optpool import RandomOpt
+from optpool import RandomGlass
 from optpool import Optimizer
 from PyQt5.QtCore import Qt
 from utilGui import Names

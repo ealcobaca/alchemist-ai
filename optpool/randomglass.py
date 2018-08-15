@@ -28,7 +28,6 @@ class RandomGlass(Optimizer):
             Optimizer.__init__(self, tg=tg, min_max_dic=min_max_dic, seed=seed,
                                path=path)
 
-        Optimizer.__init__(self, path=path, seed=seed)
         self.error = error
         self.maxit = maxit
         self.budget = budget
@@ -48,9 +47,9 @@ class RandomGlass(Optimizer):
 
     def run(self):
         """ DOCS """
-        pred = self.predict(self.best)[0]
+
         best = None
-        best_pred = sys.maxit
+        best_pred = sys.maxsize
         end = 1
         count = 0
 
@@ -58,9 +57,9 @@ class RandomGlass(Optimizer):
             state = self.random()
             pred = self.predict(state, self.tg)
 
-            if pred > self.tg - self.erro and pred < self.tg + self.erro:
+            if pred > self.tg - self.error and pred < self.tg + self.error:
                  best = state
-                 best_pred = state
+                 best_pred = pred
                  end=0
             elif np.abs(pred - self.tg) < np.abs(best_pred - self.tg):
                  best_pred = pred
@@ -68,7 +67,8 @@ class RandomGlass(Optimizer):
 
             if self.budget != None:
                 t2 = time.clock()
-                if t2-t1 >= self.budget:
+                # print(t2)
+                if t2-self.t1 >= self.budget:
                     end=0
             else:
                 count +=1
@@ -78,6 +78,6 @@ class RandomGlass(Optimizer):
 
         result = ResultOpt(
             type_opt='random',
-            result=[pred, self.best, self.all_preds, self.all_states])
+            result=[best_pred, best])
 
         return result
