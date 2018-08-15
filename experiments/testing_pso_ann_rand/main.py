@@ -81,7 +81,7 @@ def apply_opt(alg, time, comp, itera, tg):
     path_name = 'experiments/testing_pso_ann_rand/result/'+alg+'/tg'+str(tg)+'/c'+str(len(comp))+'/time'+str(time)+'/'+filename
 
     comp_vector = Optimizer.dic_to_vector_compound(result[1])
-    comp_vector = [comp_vector + []]
+    comp_vector = [comp_vector + [result[0]]]
     columns = Optimizer.AVAILABLECOMPOUNDS+['TG']
     data = pd.DataFrame(comp_vector, columns=columns)
     save_result(path_name, data)
