@@ -21,8 +21,8 @@ class AnnealingGlass(Annealer, Optimizer):
     """ TODO  """
     model_input_length = 45
 
-    def __init__(self, tg, min_max_dic, seed=None, maxit=50000, budget=None,
-                 save_states=False, save_preds=False, path=None):
+    def __init__(self, tg, min_max_dic, seed=None, maxit=50000, error=0.01,
+                 budget=None, save_states=False, save_preds=False, path=None):
 
         if path is None:
             Optimizer.__init__(self, tg=tg, min_max_dic=min_max_dic, seed=seed)
@@ -35,6 +35,7 @@ class AnnealingGlass(Annealer, Optimizer):
         self.copy_trategy = "slice"
         self.steps = maxit
         self.budget = budget
+        self.error = error
         if budget != None:
             self.t1 = time.clock()
             maxit=sys.maxsize
@@ -81,7 +82,7 @@ class AnnealingGlass(Annealer, Optimizer):
             if np.sum(aux2) == 0:
                 flag = True
 
-        
+
     def energy(self):
         """Calculates the length of the route."""
         pred = self.predict(self.state, self.tg)
@@ -97,8 +98,12 @@ class AnnealingGlass(Annealer, Optimizer):
             t2 = time.clock()
             if t2-self.t1 > self.budget:
                 self.set_user_exit(None, None)
+        if pred > self.tg - self.error and pred < self.tg + self.error:
+                self.set_user_exit(None, None)
+
         if pred < 0:
             pred = 100
+
         return np.abs(pred - self.tg)
 
     def run(self):
