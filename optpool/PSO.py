@@ -194,7 +194,7 @@ class PSO(Optimizer):
                       break
                     if err_best_g == err_best_g_before:
                         count_iter_equal = count_iter_equal + 1
-                        #print(err_best_g_before, count_iter_equal)
+                        print(err_best_g_before, count_iter_equal)
                     else:
                         count_iter_equal = 0
                     if count_iter_equal == max_iter_equal:
@@ -203,10 +203,10 @@ class PSO(Optimizer):
                         break
                     t1 = time.clock()
                     delta_t = t1-t0
-                    print(delta_t)
+                    #print(delta_t)
                     #print(self.budget)
                     if delta_t >= self.budget:
-                        print(delta_t)
+                        #print(delta_t)
                         stopCriterion = True
                         is_ok = True
                         break
