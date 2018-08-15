@@ -53,8 +53,7 @@ def compounddic2atomsfraction(compounds):
     return atomsF
 
 matrix = {'Al2O3': [0.0, 1.0], 'SiO2': [0.0, 1.0]}
-tsp = AnnealingGlass(tg=1200/1452.0, budget=120, min_max_dic=matrix,
-                     save_preds=False, save_states=False)
+tsp = RandomGlass(tg=1200/1452.0, budget=120, min_max_dic=matrix)
 
 result = tsp.run()
 result = result.get_result()
