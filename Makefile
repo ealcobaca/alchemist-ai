@@ -27,4 +27,5 @@ gui-db:
 	@printf "[----- Starting GUI (debug) -----]\n\n"
 	@cd gg_gui/ ; python -v main.py
 	@printf "\n[----- Done! -----]\n"
-
+run-exp:
+	@python3.6 -m experiments.testing_pso_ann_rand.main
