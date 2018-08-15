@@ -71,7 +71,8 @@ class Optimizer(object):
         self.tg = tg
         self.min_max_dic = min_max_dic
 
-        if seed is not None:
+        if seed != None:
+            print("seed")
             np.random.seed(seed)
 
         #self.init_clf()
