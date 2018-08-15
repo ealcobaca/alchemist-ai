@@ -22,7 +22,7 @@
 import os
 import errno
 
-filename = "experiments/testing_pso_ann_rand/asdasd/asd/asd/ola"
+filename = "experiments/testing_pso_ann_rand/result/ran/tg1100/c5/time600/ran-tg1100-c5-time600-30.csv"
 
 def save_result(filename, data):
     if not os.path.exists(os.path.dirname(filename)):
@@ -33,37 +33,73 @@ def save_result(filename, data):
                 raise
 
     with open(filename, "w") as f:
-        f.write("FOOBAR")
-#      save de data .csv 
-
-
-
-save_result(filename, None)
+        data.to_csv(filename, index=False)
 
 from multiprocessing import Pool, TimeoutError
 from optpool import RandomGlass
+from optpool import AnnealingGlass
 from optpool import OptPool
+from optpool import Optimizer
+import pandas as pd
 import numpy as np
 import time
 import os
 
-def apply_opt(i):
+alg = ['ann', 'ran']
+times = [30, 60]
+# times = [30, 60, 300, 600]
+comp = {'SiO2': [0.0, 1.0],
+        'Al2O3': [0.0, 1.0],
+        'BaO': [0.0, 1.0],
+        'Ag2O': [0.0, 1.0],
+        'As2O3': [0.0, 1.0]}
+tgs = [1100]
+reps = range(1,31)
 
-    matrix = {'Al2O3': [0.0, 1.0],
-              'BaO': [0.0, 1.0],
-              'Ag2O': [0.0, 1.0],
-              'As2O3': [0.0, 1.0],
-              'SiO2': [0.0, 1.0]}
-    tsp = RandomGlass(tg=1200/1452.0, maxit=50000, min_max_dic=matrix)
+def ger_all_comb(comp):
+    count = 0
+    l = [[] for i in range(len(comp))]
+    for i in comp.keys():
+        for j in range(count,len(comp)):
+            l[j].append({i:comp[i]})
+        count +=1
+    return l
+
+def apply_opt(alg, time, comp, itera, tg):
+
+    if alg == 'ann':
+        tsp = AnnealingGlass(tg=tg, budget=time, min_max_dic=comp)
+    elif alg == 'ran':
+        tsp = RandomGlass(tg=tg, budget=time, min_max_dic=comp)
+    elif alg == 'pso':
+        tsp = RandomGlass(tg=tg, budget=time, min_max_dic=comp)
 
     result = tsp.run()
     result = result.get_result()
-    return result[0]
+
+    filename = alg+'-tg'+str(tg)+'-c'+str(len(comp))+'-time'+str(time)+'-'+str(itera)+'.csv'
+    path_name = 'experiments/testing_pso_ann_rand/result/'+alg+'/tg'+str(tg)+'/c'+str(len(comp))+'/time'+str(time)+'/'+filename
+
+    comp_vector = Optimizer.dic_to_vector_compound(result[1])
+    comp_vector = [comp_vector + []]
+    columns = Optimizer.AVAILABLECOMPOUNDS+['TG']
+    data = pd.DataFrame(comp_vector, columns=columns)
+    save_result(path_name, data)
+
+    return 0
 
 # start 4 worker processes
 with Pool(processes=4) as pool:
 
+    multiple_results = []
     # launching multiple evaluations asynchronously *may* use more processes
-    multiple_results = [pool.apply_async(apply_opt, (i,)) for i in range(10)]
+    for algorithm in alg:
+        for tg in tgs:
+            for compound in ger_all_comb(comp):
+                for time in times:
+                    for repetitions in reps:
+                        multiple_results.append(
+                            pool.apply_async(apply_opt,(
+                                algorithm, time, compound[0], repetitions, tg)))
     print([res.get() for res in multiple_results])
 

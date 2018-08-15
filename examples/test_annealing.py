@@ -58,8 +58,10 @@ matrix = {'Al2O3': [0.0, 1.0],
           'Ag2O': [0.0, 1.0],
           'As2O3': [0.0, 1.0],
           'SiO2': [0.0, 1.0]}
-tsp = AnnealingGlass(tg=1200/1452.0, maxit=50000, min_max_dic=matrix)
+tsp = AnnealingGlass(tg=1200/1452.0, maxit=5000, min_max_dic=matrix)
 
 result = tsp.run()
 result = result.get_result()
+print(result[0])
+print(result[1])
 

@@ -115,6 +115,6 @@ class AnnealingGlass(Annealer, Optimizer):
 
         result = ResultOpt(
             type_opt='annealing',
-            result=[pred, energy, state, self.all_preds, self.all_states])
+            result=[pred, state, energy, self.all_preds, self.all_states])
 
         return result

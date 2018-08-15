@@ -78,6 +78,6 @@ class RandomGlass(Optimizer):
 
         result = ResultOpt(
             type_opt='random',
-            result=[best_pred, best])
+            result=[best_pred[0], best])
 
         return result
