@@ -1,5 +1,7 @@
 
-
+########## experiment idea ##########
+#####################################
+#
 #For each opt{PSO, Annealing, random}:
 #    For each comp{C1+C2, C1+C2+C3, …, C1+C2+...+C15}:
 #        For each maxit{0.5, 1, 5, 10}:
@@ -19,10 +21,17 @@
 # result/pso/01+c1/time-30/pso-01+c1-time30-30.csv
 
 
+from multiprocessing import Pool, TimeoutError
+from optpool import RandomGlass
+from optpool import AnnealingGlass
+from optpool import OptPool
+from optpool import Optimizer
+import pandas as pd
+import numpy as np
+import time
 import os
 import errno
 
-filename = "experiments/testing_pso_ann_rand/result/ran/tg1100/c5/time600/ran-tg1100-c5-time600-30.csv"
 
 def save_result(filename, data):
     if not os.path.exists(os.path.dirname(filename)):
@@ -35,26 +44,6 @@ def save_result(filename, data):
     with open(filename, "w") as f:
         data.to_csv(filename, index=False)
 
-from multiprocessing import Pool, TimeoutError
-from optpool import RandomGlass
-from optpool import AnnealingGlass
-from optpool import OptPool
-from optpool import Optimizer
-import pandas as pd
-import numpy as np
-import time
-import os
-
-alg = ['ann', 'ran']
-times = [30, 60]
-# times = [30, 60, 300, 600]
-comp = {'SiO2': [0.0, 1.0],
-        'Al2O3': [0.0, 1.0],
-        'BaO': [0.0, 1.0],
-        'Ag2O': [0.0, 1.0],
-        'As2O3': [0.0, 1.0]}
-tgs = [1100]
-reps = range(1,31)
 
 def ger_all_comb(comp):
     count = 0
@@ -64,6 +53,7 @@ def ger_all_comb(comp):
             l[j].append({i:comp[i]})
         count +=1
     return l
+
 
 def apply_opt(alg, time, comp, itera, tg):
 
@@ -88,18 +78,32 @@ def apply_opt(alg, time, comp, itera, tg):
 
     return 0
 
-# start 4 worker processes
-with Pool(processes=4) as pool:
+def main():
 
-    multiple_results = []
-    # launching multiple evaluations asynchronously *may* use more processes
-    for algorithm in alg:
-        for tg in tgs:
-            for compound in ger_all_comb(comp):
-                for time in times:
-                    for repetitions in reps:
-                        multiple_results.append(
-                            pool.apply_async(apply_opt,(
-                                algorithm, time, compound[0], repetitions, tg)))
-    print([res.get() for res in multiple_results])
+    alg = ['ann', 'ran']
+    times = [30, 60]
+    # times = [30, 60, 300, 600]
+    comp = {'SiO2': [0.0, 1.0],
+            'Al2O3': [0.0, 1.0],
+            'BaO': [0.0, 1.0],
+            'Ag2O': [0.0, 1.0],
+            'As2O3': [0.0, 1.0]}
+    tgs = [1100]
+    reps = range(1,31)
+
+    # start 4 worker processes
+    with Pool(processes=4) as pool:
+
+        multiple_results = []
+        # launching multiple evaluations asynchronously *may* use more processes
+        for algorithm in alg:
+            for tg in tgs:
+                for compound in ger_all_comb(comp):
+                    for time in times:
+                        for repetitions in reps:
+                            multiple_results.append(
+                                pool.apply_async(apply_opt,(
+                                    algorithm, time, compound[0], repetitions, tg)))
+        print([res.get() for res in multiple_results])
+
 
