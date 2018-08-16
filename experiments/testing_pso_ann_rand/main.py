@@ -32,7 +32,6 @@ import time
 import os
 import errno
 
-
 def save_result(filename, data):
     if not os.path.exists(os.path.dirname(filename)):
         try:
@@ -47,10 +46,10 @@ def save_result(filename, data):
 
 def ger_all_comb(comp):
     count = 0
-    l = [[] for i in range(len(comp))]
+    l = [{} for i in range(len(comp))]
     for i in comp.keys():
         for j in range(count,len(comp)):
-            l[j].append({i:comp[i]})
+            l[j][i] = comp[i]
         count +=1
     return l
 
@@ -58,11 +57,11 @@ def ger_all_comb(comp):
 def apply_opt(alg, time, comp, itera, tg):
 
     if alg == 'ann':
-        tsp = AnnealingGlass(tg=tg, budget=time, min_max_dic=comp)
+        tsp = AnnealingGlass(tg=tg, budget=time, min_max_dic=comp, error=0.01)
     elif alg == 'ran':
-        tsp = RandomGlass(tg=tg, budget=time, min_max_dic=comp)
+        tsp = RandomGlass(tg=tg, budget=time, min_max_dic=comp, error=0.01)
     elif alg == 'pso':
-        tsp = RandomGlass(tg=tg, budget=time, min_max_dic=comp)
+        tsp = RandomGlass(tg=tg, budget=time, min_max_dic=comp, error=0.01)
 
     result = tsp.run()
     result = result.get_result()
@@ -81,19 +80,26 @@ def apply_opt(alg, time, comp, itera, tg):
 def main():
 
     alg = ['ann', 'ran']
-    times = [30, 60]
-    # times = [30, 60, 300, 600]
+    # times = [30]
+    times = [30, 60, 300, 600]
     comp = {'SiO2': [0.0, 1.0],
+            'B2O3': [0.0, 1.0],
+            'Na2O': [0.0, 1.0],
             'Al2O3': [0.0, 1.0],
+            'P2O5': [0.0, 1.0],
+            'Li2O': [0.0, 1.0],
+            'ZnO': [0.0, 1.0],
+            'CaO': [0.0, 1.0],
+            'K2O': [0.0, 1.0],
             'BaO': [0.0, 1.0],
-            'Ag2O': [0.0, 1.0],
-            'As2O3': [0.0, 1.0]}
+            'MgO': [0.0, 1.0]}
     tgs = [1100]
     reps = range(1,31)
 
     # start 4 worker processes
-    with Pool(processes=4) as pool:
+    with Pool(processes=None) as pool:
 
+        print(ger_all_comb(comp))
         multiple_results = []
         # launching multiple evaluations asynchronously *may* use more processes
         for algorithm in alg:
@@ -103,7 +109,9 @@ def main():
                         for repetitions in reps:
                             multiple_results.append(
                                 pool.apply_async(apply_opt,(
-                                    algorithm, time, compound[0], repetitions, tg)))
+                                    algorithm, time, compound, repetitions, tg)))
         print([res.get() for res in multiple_results])
 
 
+if __name__ == "__main__":
+    main()

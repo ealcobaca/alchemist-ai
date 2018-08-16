@@ -98,7 +98,7 @@ class AnnealingGlass(Annealer, Optimizer):
             t2 = time.clock()
             if t2-self.t1 > self.budget:
                 self.set_user_exit(None, None)
-        if pred > (self.tg - self.error) and pred < (self.tg + self.error):
+        if pred > (self.tg - (self.error * self.tg)) and pred < (self.tg + (self.error * self.tg)):
                 self.set_user_exit(None, None)
 
         if pred < 0:
@@ -106,11 +106,14 @@ class AnnealingGlass(Annealer, Optimizer):
 
         return np.abs(pred - self.tg)
 
+    def update(self, *args, **kwargs):
+        """Wrapper for internal update."""
+        pass
+
     def run(self):
         """ DOCS """
         state, energy = self.anneal()
         pred = self.predict(state, self.tg)[0]
-        print(pred)
         #state = self.compounddic2atomsfraction(state)
 
         result = ResultOpt(

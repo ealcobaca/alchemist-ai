@@ -57,7 +57,7 @@ class RandomGlass(Optimizer):
             state = self.random()
             pred = self.predict(state, self.tg)
 
-            if pred > self.tg - self.error and pred < self.tg + self.error:
+            if pred > (self.tg - (self.error * self.tg)) and pred < (self.tg + (self.error * self.tg)):
                  best = state
                  best_pred = pred
                  end=0
