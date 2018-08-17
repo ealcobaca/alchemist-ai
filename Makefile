@@ -28,4 +28,4 @@ gui-db:
 	@cd gg_gui/ ; python -v main.py
 	@printf "\n[----- Done! -----]\n"
 run-exp:
-	@python3.6 -m experiments.testing_pso_ann_rand.main > experiments/testing_pso_ann_rand/out.txt
+	@python3.6 -m experiments.testing_pso_ann_rand.main > experiments/testing_pso_ann_rand/out.txt &
