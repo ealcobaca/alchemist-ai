@@ -1,4 +1,6 @@
 env/*
+env-3.5/*
+env-3.6/*
 *.pyc
 __pycache__/
 .csv
