@@ -92,7 +92,7 @@ class Particle:
         self.position_i = [self.position_i[i]/summatory for i in range(0,num_dimensions)]
                 
 class PSO(Optimizer):
-    def __init__(self, sizeVector, target, max_min_comp, n_cpu=None, path=None, clf_rf=None, limiar_rf=None, budget=None):
+    def __init__(self, sizeVector, target, max_min_comp, n_cpu=None, path=None, clf_rf=None, limiar_rf=None, budget=None, error=0.01):
         if path is None:
             Optimizer.__init__(self, tg=target, min_max_dic=max_min_comp, clf_rf=clf_rf, limiar_rf=limiar_rf)
         else:
@@ -194,7 +194,7 @@ class PSO(Optimizer):
                       break
                     if err_best_g == err_best_g_before:
                         count_iter_equal = count_iter_equal + 1
-                        print(err_best_g_before, count_iter_equal)
+                        # print(err_best_g_before, count_iter_equal)
                     else:
                         count_iter_equal = 0
                     if count_iter_equal == max_iter_equal:
@@ -232,8 +232,9 @@ class PSO(Optimizer):
             valuesFunction.append(fit_best_g)
             errors.append(err_best_g)
             
-        print(errors)
+        # print(errors)
         result = ResultOpt(type_opt='PSO', result=[solutions, valuesFunction, errors])
+        # result = ResultOpt(type_opt='PSO', result=[valuesFunction, solution, errors])
         
         #return solucoes, valoresFuncao, erros
         return result
