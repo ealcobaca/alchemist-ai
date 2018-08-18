@@ -80,7 +80,6 @@ def apply_opt(alg, time, comp, itera, tg):
 def main():
 
     alg = ['ann', 'ran']
-    # times = [30]
     times = [30, 60, 300, 600]
     comp = {'SiO2': [0.0, 1.0],
             'B2O3': [0.0, 1.0],
@@ -93,7 +92,7 @@ def main():
             'K2O': [0.0, 1.0],
             'BaO': [0.0, 1.0],
             'MgO': [0.0, 1.0]}
-    tgs = [1100]
+    tgs = [1100/1452.0, 750/1452.0, 900/1452.0, 400/1452.0]
     reps = range(1,31)
 
     # start 4 worker processes
