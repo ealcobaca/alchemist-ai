@@ -89,6 +89,7 @@ def apply_opt(alg, time, comp, itera, tg, error):
 
 def main():
 
+    np.random.seed(123)
     alg = ['ann', 'ran', 'pso']
     times = [30, 60, 300, 600]
     # times = [30]
