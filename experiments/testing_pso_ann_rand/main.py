@@ -126,6 +126,8 @@ def main():
                                     algorithm, time, compound, repetitions, tg, error)))
         print([res.get() for res in multiple_results])
         print("END")
+        pool.close()
+        pool.join()
 
 
 if __name__ == "__main__":
