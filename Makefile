@@ -42,5 +42,9 @@ exp-st:
 	@find experiments/testing_pso_ann_rand/result/ran -type f | wc -l
 zip-ann:
 	zip -r experiments/testing_pso_ann_rand/ann.zip experiments/testing_pso_ann_rand/result/ann/
+zip-pso:
+	zip -r experiments/testing_pso_ann_rand/pso.zip experiments/testing_pso_ann_rand/result/pso/
+zip-ran:
+	zip -r experiments/testing_pso_ann_rand/ran.zip experiments/testing_pso_ann_rand/result/ran/
 
 
