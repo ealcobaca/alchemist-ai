@@ -27,5 +27,20 @@ gui-db:
 	@printf "[----- Starting GUI (debug) -----]\n\n"
 	@cd gg_gui/ ; python -v main.py
 	@printf "\n[----- Done! -----]\n"
-run-exp:
-	@python3.6 -m experiments.testing_pso_ann_rand.main > experiments/testing_pso_ann_rand/out.txt &
+run-exp-ann:
+	@python3.6 -m experiments.testing_pso_ann_rand.main ann > experiments/testing_pso_ann_rand/out.txt 2> experiments/testing_pso_ann_rand/error.txt &
+run-exp-pso:
+	@python3.6 -m experiments.testing_pso_ann_rand.main pso > experiments/testing_pso_ann_rand/out.txt 2> experiments/testing_pso_ann_rand/error.txt &
+run-exp-ran:
+	@python3.6 -m experiments.testing_pso_ann_rand.main ran > experiments/testing_pso_ann_rand/out.txt 2> experiments/testing_pso_ann_rand/error.txt &
+exp-st:
+	@echo 'Annealing :'
+	@find experiments/testing_pso_ann_rand/result/ann -type f | wc -l
+	@echo 'PSO :'
+	@find experiments/testing_pso_ann_rand/result/pso -type f | wc -l
+	@echo 'Random :'
+	@find experiments/testing_pso_ann_rand/result/ran -type f | wc -l
+zip-ann:
+	zip -r experiments/testing_pso_ann_rand/ann.zip experiments/testing_pso_ann_rand/result/ann/
+
+

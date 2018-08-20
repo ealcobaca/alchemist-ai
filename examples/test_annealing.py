@@ -11,7 +11,6 @@ Description: A simples test to the AnnealingGlass class
 from optpool import AnnealingGlass
 from optpool import OptPool
 import numpy as np
-import matplotlib.pyplot as plt
 import re
 
 # np.random.seed(123)
