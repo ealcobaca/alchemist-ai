@@ -61,6 +61,7 @@ class RandomGlass(Optimizer):
                  best = state
                  best_pred = pred
                  end=0
+                 print('found! {0}'.format(pred))
             elif np.abs(pred - self.tg) < np.abs(best_pred - self.tg):
                  best_pred = pred
                  best = state
@@ -70,6 +71,7 @@ class RandomGlass(Optimizer):
                 # print(t2)
                 if t2-self.t1 >= self.budget:
                     end=0
+                    print('time over')
             else:
                 count +=1
                 if count == self.maxit:
