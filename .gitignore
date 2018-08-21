@@ -5,4 +5,5 @@ env-3.6/*
 __pycache__/
 .csv
 data/
-data
+*.pdf
+result/
