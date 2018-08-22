@@ -107,7 +107,7 @@ class Optimizer(object):
         else:
             #print(self.limiar_rf)
             target = target*1452.0
-            if target < self.limiar_rf:# 1200.0:
+            if target > self.limiar_rf:# 1200.0:
                 # ANN ####################################################        
                 pred = self.model.predict(example)
             else:

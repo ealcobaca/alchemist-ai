@@ -22,19 +22,21 @@ class AnnealingGlass(Annealer, Optimizer):
     model_input_length = 45
 
     def __init__(self, tg, min_max_dic, seed=None, maxit=50000, budget=None,
-                 save_states=False, save_preds=False, path=None):
+                 save_states=False, save_preds=False, path=None,
+                 clf_rf=None, limiar_rf=None):
 
         if path is None:
-            Optimizer.__init__(self, tg=tg, min_max_dic=min_max_dic, seed=seed)
+            Optimizer.__init__(self, tg=tg, min_max_dic=min_max_dic, seed=seed, clf_rf=clf_rf, limiar_rf=limiar_rf)
         else:
             Optimizer.__init__(self, tg=tg, min_max_dic=min_max_dic, seed=seed,
-                               path=path)
+                               path=path, clf_rf=clf_rf, limiar_rf=limiar_rf)
         self.random()
         Annealer.__init__(self, initial_state=self.state)  # important!
 
         self.copy_trategy = "slice"
         self.steps = maxit
         self.budget = budget
+        self.limiar_rf = limiar_rf
         if budget != None:
             self.t1 = time.clock()
             maxit=sys.maxsize
@@ -104,7 +106,7 @@ class AnnealingGlass(Annealer, Optimizer):
     def run(self):
         """ DOCS """
         state, energy = self.anneal()
-        pred = self.predict(state, self.tg)[0]
+        pred = self.predict(state, self.tg)#[0]
         #state = self.compounddic2atomsfraction(state)
 
         result = ResultOpt(

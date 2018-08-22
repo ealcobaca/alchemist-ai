@@ -34,9 +34,9 @@ class App(QMainWindow, Ui_main_window):
         self.setupUi(self)
 
         #Train RF
-        self.usa_RF = False
+        self.usa_RF = True
         self.model_rf = None
-        self.limiar_rf = 1100.0
+        self.limiar_rf = 500.0
         if self.usa_RF:            
             self.init_clf(self.limiar_rf)
 
@@ -299,7 +299,10 @@ class App(QMainWindow, Ui_main_window):
         for i in range(amount):
             tsp = AnnealingGlass(tg=tg, min_max_dic=matrix,
                                  save_preds=True, save_states=True,
-                                 path="../models/ANN.h5")
+                                 path="../models/ANN.h5",
+                                 clf_rf=self.model_rf,
+                                 limiar_rf=self.limiar_rf,
+                                 budget=30)
             result = tsp.run()
             print()
             pred = result.get_result()[0]
@@ -425,11 +428,11 @@ class App(QMainWindow, Ui_main_window):
         data_train = []
         data_target = []
         for d in data:
-            if d[len(data[0])-4] >= limiar:
+            if d[len(data[0])-4] <= limiar:
                 data_train.append(d[0:(len(data[0])-4)])
                 data_target.append(d[len(data[0])-3])
         print(len(data_train))
-        clf = RandomForestRegressor(n_estimators= 1000, min_samples_leaf=1, max_depth=1000, random_state=0)
+        clf = RandomForestRegressor(n_estimators= 100, min_samples_leaf=1, max_depth=500, random_state=0)
         print('Treinando RF...')
         self.model_rf = clf.fit(data_train, data_target)
         #predictions = clf.predict(X_test)

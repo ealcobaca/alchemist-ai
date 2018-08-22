@@ -171,7 +171,7 @@ class PSO(Optimizer):
             iteration=0
             stopCriterion = False
             is_ok = False
-            max_iter_equal = maxiter/5# maxiter/5
+            max_iter_equal = maxiter/100# maxiter/5
             count_iter_equal = 0
             err_best_g_before = err_best_g
             while iteration < maxiter and not stopCriterion:
