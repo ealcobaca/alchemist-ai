@@ -12,7 +12,6 @@ import re
 import numpy as np
 from keras.models import load_model
 import tensorflow as tf
-
 from sklearn.ensemble import RandomForestRegressor
 from util import Reader
 
@@ -63,6 +62,9 @@ class Optimizer(object):
 
 
     def __init__(self, tg, min_max_dic, seed=None, path='models/ANN.h5', clf_rf=None, limiar_rf=1200):
+        #tf.logging.set_verbosity(tf.logging.ERROR)
+        #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+        #os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '3'
         custom_objects = {'huber_loss': tf.losses.huber_loss}
         self.model = load_model(path, custom_objects=custom_objects)
         self.model_rf = clf_rf
@@ -71,7 +73,8 @@ class Optimizer(object):
         self.tg = tg
         self.min_max_dic = min_max_dic
 
-        if seed is not None:
+        if seed != None:
+            print("seed")
             np.random.seed(seed)
 
         #self.init_clf()
@@ -188,7 +191,7 @@ class Optimizer(object):
 
     @classmethod
     def dic_to_vector_compound(cls, dic):
-        vector = [0]*len(cls.AVAILABLECOMPOUNDS)
+        vector = [0.0]*len(cls.AVAILABLECOMPOUNDS)
         for key in dic.keys():
             idx = cls.AVAILABLECOMPOUNDS.index(key)
             vector[idx] = dic[key]

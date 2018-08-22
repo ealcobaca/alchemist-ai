@@ -21,8 +21,8 @@ class AnnealingGlass(Annealer, Optimizer):
     """ TODO  """
     model_input_length = 45
 
-    def __init__(self, tg, min_max_dic, seed=None, maxit=50000, budget=None,
-                 save_states=False, save_preds=False, path=None,
+    def __init__(self, tg, min_max_dic, seed=None, maxit=50000, error=0.01,
+                 budget=None, save_states=False, save_preds=False, path=None,
                  clf_rf=None, limiar_rf=None):
 
         if path is None:
@@ -37,6 +37,7 @@ class AnnealingGlass(Annealer, Optimizer):
         self.steps = maxit
         self.budget = budget
         self.limiar_rf = limiar_rf
+        self.error = error
         if budget != None:
             self.t1 = time.clock()
             maxit=sys.maxsize
@@ -83,7 +84,7 @@ class AnnealingGlass(Annealer, Optimizer):
             if np.sum(aux2) == 0:
                 flag = True
 
-        
+
     def energy(self):
         """Calculates the length of the route."""
         pred = self.predict(self.state, self.tg)
@@ -99,9 +100,17 @@ class AnnealingGlass(Annealer, Optimizer):
             t2 = time.clock()
             if t2-self.t1 > self.budget:
                 self.set_user_exit(None, None)
+        if pred > (self.tg - (self.error * self.tg)) and pred < (self.tg + (self.error * self.tg)):
+                self.set_user_exit(None, None)
+
         if pred < 0:
             pred = 100
+
         return np.abs(pred - self.tg)
+
+    def update(self, *args, **kwargs):
+        """Wrapper for internal update."""
+        pass
 
     def run(self):
         """ DOCS """
@@ -111,6 +120,6 @@ class AnnealingGlass(Annealer, Optimizer):
 
         result = ResultOpt(
             type_opt='annealing',
-            result=[pred, energy, state, self.all_preds, self.all_states])
+            result=[pred, state, energy, self.all_preds, self.all_states])
 
         return result
