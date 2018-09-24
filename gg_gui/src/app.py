@@ -34,7 +34,7 @@ class App(QMainWindow, Ui_main_window):
         self.setupUi(self)
 
         #Train RF
-        self.usa_RF = True
+        self.usa_RF = False
         self.model_rf = None
         self.limiar_rf = 500.0
         if self.usa_RF:            
@@ -265,17 +265,12 @@ class App(QMainWindow, Ui_main_window):
         self.progress.setValue(completed)
         self.progress.setHidden(False)
         for i in range(amount):
-            tsp = RandomOpt(tg=tg, min_max_dic=matrix, path="../models/ANN.h5")
+            tsp = RandomGlass(tg=tg, min_max_dic=matrix, path="../models/ANN.h5")
             result = tsp.run()
             print()
             pred = result.get_result()[0]
-            print(result.get_result()[0])
-            vector = result.get_result()[2].copy()
-            vector = Optimizer.dic_to_vector(vector)
-            print(vector)
-            print(sum(vector))
-            erro = result.get_result()[1]
-            print(erro)
+            vector = result.get_result()[1].copy()
+            vector = Optimizer.dic_to_vector_compound(vector)
             vector.append(self.to_real_tg(pred))
             self.add_result_tb(vector)
             results.append(result)
@@ -305,19 +300,14 @@ class App(QMainWindow, Ui_main_window):
                                  budget=30)
             result = tsp.run()
             print()
-            pred = result.get_result()[0]
-            print(result.get_result()[0])
-            vector = result.get_result()[2].copy()
+            pred = result.get_result()[0][0]
+            vector = result.get_result()[1].copy()
             #vector = Optimizer.dic_to_vector(vector)
             vector = Optimizer.dic_to_vector_compound(vector)
-            print(vector)
-            print(sum(vector))
-            erro = result.get_result()[1]
-            print(erro)
             vector.append(self.to_real_tg(pred))
             self.add_result_tb(vector)
             results.append(result)
-
+            erro = 0
             vector2 = vector
             vector2.append(erro)
             matrix_results.append(vector2)
@@ -401,13 +391,19 @@ class App(QMainWindow, Ui_main_window):
 
             # chamada para a API
             print()
-            if opt == "Annealing":
+            if opt == "Method 1":
                 self.annealing()
-            elif opt == "PSO":
+            elif opt == "Method 2":
                 self.pso()
-            elif opt == "Random":
-                print("calling")
+            elif opt == "Method 3":
                 self.random()
+            # if opt == "Annealing":
+            #     self.annealing()
+            # elif opt == "PSO":
+            #     self.pso()
+            # elif opt == "Random":
+            #     print("calling")
+            #     self.random()
 
         except Exception as inst:
             print("\n#################### Error ####################")

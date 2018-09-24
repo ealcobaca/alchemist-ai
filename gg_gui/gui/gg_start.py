@@ -13,6 +13,7 @@ class Ui_main_window(object):
     def setupUi(self, main_window):
         main_window.setObjectName("main_window")
         main_window.resize(684, 828)
+        main_window.setWindowTitle('Alchemist');
         self.centralwidget = QtWidgets.QWidget(main_window)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -70,7 +71,7 @@ class Ui_main_window(object):
         self.opt_label = QtWidgets.QLabel(self.centralwidget)
         self.opt_label.setGeometry(QtCore.QRect(460, 100, 201, 22))
         self.opt_label.setObjectName("opt_label")
-        self.opt_label.setText("Optimizer")
+        self.opt_label.setText("Methods:")
 
         # amount
         self.amount_sp = QtWidgets.QSpinBox(self.centralwidget)
@@ -102,9 +103,9 @@ class Ui_main_window(object):
         self.opt_cb = QtWidgets.QComboBox(self.centralwidget)
         self.opt_cb.setGeometry(QtCore.QRect(460, 130, 201, 30))
         self.opt_cb.setObjectName("opt_cb")
-        self.opt_cb.addItem("Annealing")
-        self.opt_cb.addItem("PSO")
-        self.opt_cb.addItem("Random")
+        self.opt_cb.addItem("Method 1")
+        self.opt_cb.addItem("Method 2")
+        self.opt_cb.addItem("Method 3")
 
         # result_tb
         self.result_label = QtWidgets.QLabel(self.centralwidget)

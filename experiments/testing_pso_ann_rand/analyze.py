@@ -41,11 +41,11 @@ def boxplot(alg, title, file_name, zoom=False):
             axes[i][j].grid(axis='y', which='major', linestyle='-', linewidth='0.5', color='gray')
             # axes[i][j].axhline(y=tg[i], color='r', linestyle='--')
 
-            l1=axes[i][j].axhline(y=tg[i] - (tg[i]*0.1), color=baseline_color[2], linestyle='-.')
+            l1=axes[i][j].axhline(y=tg[i] - (tg[i]*0.06), color=baseline_color[2], linestyle='-.')
             l2=axes[i][j].axhline(y=tg[i] - (tg[i]*0.01), color=baseline_color[1], linestyle='--')
             l3=axes[i][j].axhline(y=tg[i], color=baseline_color[0], linestyle='-')
             axes[i][j].axhline(y=tg[i] + (tg[i]*0.01), color=baseline_color[1], linestyle='--')
-            axes[i][j].axhline(y=tg[i] + (tg[i]*0.1), color=baseline_color[2], linestyle='-.')
+            axes[i][j].axhline(y=tg[i] + (tg[i]*0.06), color=baseline_color[2], linestyle='-.')
 
             if zoom == False: axes[i][j].set_ylim(300,1200)
 
@@ -68,7 +68,7 @@ def boxplot(alg, title, file_name, zoom=False):
                 ax.set_ylabel(tg_names[i], rotation=90, fontsize=30, fontweight='bold')
                 ax.set_yticklabels([], grid=False)
                 axes[i][j].legend((l1, l2, l3),
-                               ('$^+_-$ 10%','$^+_-$ 1%',str(tg[i])),
+                               ('$^+_-$ 6%','$^+_-$ 1%',str(tg[i])),
                                fontsize=20, bbox_to_anchor=(1.1, 0.7))
 
             axes[i][j].get_yaxis().set_visible(True)
@@ -105,11 +105,11 @@ def boxplot_x(title, file_name, tg, miny, maxy, sep=1):
 
         axes[i].xaxis.set_major_locator(mpl.ticker.FixedLocator((np.array(range(len(ticks)))*dist)))
         axes[i].xaxis.set_major_formatter(mpl.ticker.FixedFormatter((ticks)))
-        l1=axes[i].axhline(y=tg - (tg*0.1), color=baseline_color[2], linestyle='-.')
+        l1=axes[i].axhline(y=tg - (tg*0.06), color=baseline_color[2], linestyle='-.')
         l2=axes[i].axhline(y=tg - (tg*0.01), color=baseline_color[1], linestyle='--')
         l3=axes[i].axhline(y=tg, color=baseline_color[0], linestyle='-')
         axes[i].axhline(y=tg + (tg*0.01), color=baseline_color[1], linestyle='--')
-        axes[i].axhline(y=tg + (tg*0.1), color=baseline_color[2], linestyle='-.')
+        axes[i].axhline(y=tg + (tg*0.06), color=baseline_color[2], linestyle='-.')
         axes[i].set_xlim(-2, len(ticks)*dist)
         axes[i].set_ylim(miny, maxy)
         axes[i].set_title(time_names[i], fontsize=20)
@@ -127,7 +127,7 @@ def boxplot_x(title, file_name, tg, miny, maxy, sep=1):
             for patch in bplot['boxes']:
                 patch.set_facecolor(colors[j])
         axes[i].legend((bp1["boxes"][0], bp2["boxes"][0], bp3["boxes"][0], l1, l2, l3),
-                       ('Annealing', 'PSO', 'Random','$^+_-$ 10%','$^+_-$ 1%',str(tg)),
+                       ('Annealing', 'PSO', 'Random','$^+_-$ 6%','$^+_-$ 1%',str(tg)),
                        fontsize=14, bbox_to_anchor=(1.00, 0.7))
 
     axes[3].set_xlabel('Compounds',fontsize=20)
@@ -161,11 +161,11 @@ def boxplot_x_best(title, file_name, sep=1):
 
         axes[i].xaxis.set_major_locator(mpl.ticker.FixedLocator((np.array(range(len(ticks)))*dist)))
         axes[i].xaxis.set_major_formatter(mpl.ticker.FixedFormatter((ticks)))
-        l1=axes[i].axhline(y=tg[i] - (tg[i]*0.1), color=baseline_color[2], linestyle='-.')
+        l1=axes[i].axhline(y=tg[i] - (tg[i]*0.06), color=baseline_color[2], linestyle='-.')
         l2=axes[i].axhline(y=tg[i] - (tg[i]*0.01), color=baseline_color[1], linestyle='--')
         l3=axes[i].axhline(y=tg[i], color=baseline_color[0], linestyle='-')
         axes[i].axhline(y=tg[i] + (tg[i]*0.01), color=baseline_color[1], linestyle='--')
-        axes[i].axhline(y=tg[i] + (tg[i]*0.1), color=baseline_color[2], linestyle='-.')
+        axes[i].axhline(y=tg[i] + (tg[i]*0.06), color=baseline_color[2], linestyle='-.')
         axes[i].set_xlim(-2, len(ticks)*dist)
         # axes[i].set_ylim(miny, maxy)
         axes[i].set_title(time_names[3], fontsize=20)
@@ -183,7 +183,7 @@ def boxplot_x_best(title, file_name, sep=1):
             for patch in bplot['boxes']:
                 patch.set_facecolor(colors[j])
         axes[i].legend((bp1["boxes"][0], bp2["boxes"][0], bp3["boxes"][0], l1, l2, l3),
-                       ('Annealing', 'PSO', 'Random','$^+_-$ 10%','$^+_-$ 1%',str(tg[i])),
+                       ('Annealing', 'PSO', 'Random','$^+_-$ 6%','$^+_-$ 1%',str(tg[i])),
                        fontsize=14, bbox_to_anchor=(1.00, 0.7))
 
     axes[3].set_xlabel('Compounds',fontsize=20)
@@ -242,11 +242,11 @@ def boxplot_x_best_violin(title, file_name, sep=1):
 
         axes[i].xaxis.set_major_locator(mpl.ticker.FixedLocator((np.array(range(len(ticks)))*dist)))
         axes[i].xaxis.set_major_formatter(mpl.ticker.FixedFormatter((ticks)))
-        l1=axes[i].axhline(y=tg[i] - (tg[i]*0.1), color=baseline_color[2], linestyle='-.')
+        l1=axes[i].axhline(y=tg[i] - (tg[i]*0.06), color=baseline_color[2], linestyle='-.')
         l2=axes[i].axhline(y=tg[i] - (tg[i]*0.01), color=baseline_color[1], linestyle='--')
         l3=axes[i].axhline(y=tg[i], color=baseline_color[0], linestyle='-')
         axes[i].axhline(y=tg[i] + (tg[i]*0.01), color=baseline_color[1], linestyle='--')
-        axes[i].axhline(y=tg[i] + (tg[i]*0.1), color=baseline_color[2], linestyle='-.')
+        axes[i].axhline(y=tg[i] + (tg[i]*0.06), color=baseline_color[2], linestyle='-.')
         axes[i].set_xlim(-2, len(ticks)*dist)
         # axes[i].set_ylim(miny, maxy)
         axes[i].set_title(time_names[3], fontsize=20)
@@ -270,7 +270,7 @@ def boxplot_x_best_violin(title, file_name, sep=1):
             for patch in bplot['bodies']:
                 patch.set_facecolor(colors[j])
         axes[i].legend((bp1["bodies"][0], bp2["bodies"][0], bp3["bodies"][0], l1, l2, l3),
-                       ('Annealing', 'PSO', 'Random','$^+_-$ 10%','$^+_-$ 1%',str(tg[i])),
+                       ('Annealing', 'PSO', 'Random','$^+_-$ 6%','$^+_-$ 1%',str(tg[i])),
                        fontsize=14, bbox_to_anchor=(1.00, 0.7))
 
         for data1, sep in zip([data1, data2, data3], [-sep, 0, sep]):
