@@ -27,6 +27,8 @@ The GUI application can be run using the Makefile as follow:
 ```
 make gui
 ```
+![Alchemist](https://github.com/ealcobaca/Glass-Generator/blob/master/alchemist-2018.png?raw=true)
+
 
 ## Authors
 * **Bruno Pimentel** - *Initial work* - [bapimentel](https://github.com/bapimentel)
