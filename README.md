@@ -14,6 +14,8 @@ The installation can be done by following these steps:
 ```
 git clone git@github.com:ealcobaca/Glass-Generator.git
 cd Glass-Generator
+python3.5 -m venv env3.5/
+source env3.6/bin/activate
 pip install -r requeriments.txt
 ```
 
