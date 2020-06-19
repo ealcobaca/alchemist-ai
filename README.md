@@ -16,7 +16,7 @@ git clone git@github.com:ealcobaca/Glass-Generator.git
 cd Glass-Generator
 python3.5 -m venv env3.5/
 source env3.5/bin/activate
-pip install -r requeriments.txt
+pip install -r requirements.txt
 ```
 
 or you can use the Makefile
