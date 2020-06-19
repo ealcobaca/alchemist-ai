@@ -47,4 +47,5 @@ zip-pso:
 zip-ran:
 	zip -r experiments/testing_pso_ann_rand/ran.zip experiments/testing_pso_ann_rand/result/ran/
 
-
+install:
+	pip install -r requirements.txt
