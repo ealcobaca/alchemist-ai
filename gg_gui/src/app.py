@@ -391,11 +391,11 @@ class App(QMainWindow, Ui_main_window):
 
             # chamada para a API
             print()
-            if opt == "Method 1":
+            if opt == "SA":
                 self.annealing()
-            elif opt == "Method 2":
+            elif opt == "PSO":
                 self.pso()
-            elif opt == "Method 3":
+            elif opt == "RS":
                 self.random()
             # if opt == "Annealing":
             #     self.annealing()
