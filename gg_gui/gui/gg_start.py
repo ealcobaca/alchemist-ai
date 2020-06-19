@@ -103,9 +103,9 @@ class Ui_main_window(object):
         self.opt_cb = QtWidgets.QComboBox(self.centralwidget)
         self.opt_cb.setGeometry(QtCore.QRect(460, 130, 201, 30))
         self.opt_cb.setObjectName("opt_cb")
-        self.opt_cb.addItem("Method 1")
-        self.opt_cb.addItem("Method 2")
-        self.opt_cb.addItem("Method 3")
+        self.opt_cb.addItem("SA")
+        self.opt_cb.addItem("PSO")
+        self.opt_cb.addItem("RS")
 
         # result_tb
         self.result_label = QtWidgets.QLabel(self.centralwidget)
