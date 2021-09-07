@@ -1,5 +1,5 @@
-# optimizer Pool
-This is a library to execute a pool of optimizers algorithm that aims to search a set of solutions to compose glass given a specific TG.
+## Alchemist
+The Alchemist uses a pool of optimization algorithms and machine learning models to search for viable glass compositions for a given glass transition temperature (Tg) value.
 
 
 ## Dependencies
